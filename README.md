@@ -298,6 +298,7 @@ PyArrow. Model weights download on first use (`HF_HOME` sets the cache).
 | `results/shortlist_latest.csv`, `results/shortlists_all_test_dates.csv.gz` | Top-100 shortlists |
 | `results/experiment_*.json`, `results/rolling_experiment.json`, `results/kumo_*.json` | Experiment outputs |
 | `charts/fig1..fig8.png` | Figures for the presentation |
+| `presentation/food_inspections_presentation.pptx` | The 14-slide presentation with speaker notes; rebuild from current results with `python presentation/build_presentation.py . presentation/food_inspections_presentation.pptx` (needs `python-pptx`) |
 
 Figure guide: `fig1` context · `fig2` Precision@100 per decision date · `fig3` Precision@K · `fig4`
 shortlist overlap · `fig5` shortlist geography · `fig6` XGBoost feature importance · `fig7` logistic
