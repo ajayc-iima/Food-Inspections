@@ -498,6 +498,92 @@ if cf_path.exists():
              "quarter. Limits: the validation gain is small and negative on one fold, one quarter has a standard "
              "error of about 5 points, and on that quarter plain logistic regression did worse than the history rule.")
 
+# 12c the aha: local strictness ---------------------------------------------------
+loc_path = ROOT / "results/confirm_local.json"
+if loc_path.exists():
+    LC = json.loads(loc_path.read_text())
+    grid = LC["failure_rate_by_band_and_local_quintile_2022_2025"]
+    s = new(dark=True)
+    header(s, "The aha", "Same track record, stricter area: up to 1.4× as likely to fail", dark=True)
+    text(s, MX, 1.95, 8.6, 0.35, "Own past failure  ·  recent failure rate of inspections within 1 km →  "
+         "(lowest to highest fifth)", size=13, color=LIGHT_ON_DARK)
+    lo_c, hi_c = (0x2B, 0x4A, 0x75), (0xA0, 0xC8, 0xF0)
+    allv = [v for row in grid.values() for v in row.values()]
+    vmin, vmax = min(allv), max(allv)
+    cellw, cellh, x0, y0 = 1.32, 0.95, MX + 1.6, 2.45
+    for i, band in enumerate(["low", "middle", "high"]):
+        text(s, MX, y0 + i * (cellh + 0.15) + 0.28, 1.5, 0.4, band.capitalize(), size=18, color=WHITE)
+        for j in range(1, 6):
+            v = grid[band][str(j)]
+            f = (v - vmin) / (vmax - vmin)
+            col = RGBColor(*[int(a + (b - a) * f) for a, b in zip(lo_c, hi_c)])
+            hl = (band, j) in {("low", 5), ("middle", 1)}
+            if hl:
+                col = ACCENT
+            r = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x0 + (j - 1) * (cellw + 0.12)),
+                                   Inches(y0 + i * (cellh + 0.15)), Inches(cellw), Inches(cellh))
+            r.adjustments[0] = 0.1
+            r.fill.solid(); r.fill.fore_color.rgb = col; r.line.fill.background(); r.shadow.inherit = False
+            tf = r.text_frame
+            tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+            run = tf.paragraphs[0].add_run()
+            run.text = f"{v * 100:.0f}%"
+            run.font.size = Pt(22); run.font.bold = hl; run.font.name = BODYF
+            run.font.color.rgb = WHITE if (f < 0.55 or hl) else INK
+    xr = x0 + 5 * (cellw + 0.12) + 0.3
+    text(s, xr, 2.45, W - MX - xr, 1.6, "A clean-record place in a strict area fails as often as a middling one in "
+         "a lenient area (orange).", size=18, color=WHITE)
+    text(s, xr, 4.15, W - MX - xr, 1.6, "Chicago’s own model found the inspectors who last visited mattered most. "
+         "We have no inspector ID, so we measure how often inspections nearby failed recently.", size=14,
+         color=LIGHT_ON_DARK)
+    footer(s, "Share whose next routine inspection failed, 2022–25 decision dates. Source: results/confirm_local.json.",
+           dark=True)
+    notes(s, "This is the aha moment. Read across a row: same past record, but the more often inspections around a "
+             "place have failed recently, the more likely it fails next. A clean-record place in the strictest fifth "
+             "of areas fails 22% of the time, the same as a middling place in the most lenient fifth. Inspectors "
+             "work territories, so recent local failures are a public-data proxy for who is inspecting. The data "
+             "cannot separate inspector strictness from neighbourhood conditions, but recent rates beat the "
+             "long-run ZIP rate, which points to something that changes over time.")
+
+    # final model
+    s = new()
+    pk_ = LC["period_2022_2025"]["precision_at_100"]
+    ho_ = LC["date_2025_09_30"]["precision_at_100"]
+    cb = LC["period_2022_2025"]["comparisons"]["logistic_local_complaints minus baseline"]
+    header(s, "The final model · pre-registered",
+           f"Adding complaints and local strictness: {pct(pk_['logistic_local_complaints'])}, about "
+           f"{(pk_['logistic_local_complaints'] / pk_['baseline'] - 1) * 100:.0f}% more failures than the rule")
+    cd = CategoryChartData()
+    cd.categories = ["Random 100", "A · history rule", "B · logistic", "+ complaint history", "+ local strictness"]
+    cd.add_series("Precision@100", [TP["mean_base_rate"], pk_["baseline"], pk_["logistic"],
+                                    pk_["logistic_complaints"], pk_["logistic_local_complaints"]])
+    gf = s.shapes.add_chart(XL_CHART_TYPE.BAR_CLUSTERED, Inches(MX), Inches(2.0), Inches(CW), Inches(3.6), cd)
+    ch = gf.chart; ch.has_legend = False; ch.has_title = False
+    plot = ch.plots[0]; plot.gap_width = 45; plot.has_data_labels = True
+    dl = plot.data_labels; dl.number_format = '0.0%'; dl.number_format_is_linked = False
+    dl.position = XL_LABEL_POSITION.OUTSIDE_END
+    dl.font.size = Pt(16); dl.font.bold = True; dl.font.color.rgb = INK; dl.font.name = BODYF
+    for i, c in enumerate([RANDOM, BASE, RGBColor(0x8F, 0xAF, 0xD6), RGBColor(0x57, 0x87, 0xC2), LOGIT]):
+        pt = plot.series[0].points[i]; pt.format.fill.solid(); pt.format.fill.fore_color.rgb = c
+    ca = ch.category_axis; ca.reverse_order = True
+    ca.tick_labels.font.size = Pt(15); ca.tick_labels.font.color.rgb = INK; ca.tick_labels.font.name = BODYF
+    ca.format.line.color.rgb = LINE
+    va = ch.value_axis; va.visible = False; va.has_major_gridlines = False
+    va.maximum_scale = 0.6; va.minimum_scale = 0
+    text(s, MX, 5.8, CW, 0.8, [[("vs history rule: ", {}),
+         (f"+{cb['mean_difference'] * 100:.1f} points [+{cb['ci95'][0] * 100:.1f}, +{cb['ci95'][1] * 100:.1f}]",
+          {"bold": True, "color": INK}), (f", ahead on {cb['dates_ahead']} of 14 quarters. Untouched 2025 Q3: ", {}),
+         (f"{pct(ho_['logistic_local_complaints'], 0)}", {"bold": True, "color": INK}),
+         (f" vs {pct(ho_['baseline'], 0)} for the rule and {pct(ho_['logistic'], 0)} for plain logistic.", {})]],
+         size=17)
+    footer(s, "Precision@100, mean of 14 decision dates 2022–25. Plan committed before scoring: docs/preregistration_local.md.")
+    notes(s, "About 6.5 more failures in every 100 early inspections, roughly 90 more over the 14 quarters, with "
+             "the same inspector effort. On the newest quarter, where plain logistic regression had slipped below "
+             "the history rule, the full model recovers to 48%. We committed features, model and decision rule "
+             "before scoring; all three conditions held. Limits: the step from complaint history to local "
+             "strictness alone is +1.4 points with an interval touching zero, and the feature set was chosen on "
+             "eight validation dates.")
+
 # 13 next ---------------------------------------------------------------------
 s = new(alt=True)
 header(s, "What we tried, and what comes next", "Beyond accuracy: rank by harm averted per inspector-hour")
@@ -523,14 +609,15 @@ notes(s, "The complaint-history gain is confirmed on the previous slide. The bus
 # 14 close --------------------------------------------------------------------
 s = new(dark=True)
 text(s, MX, 1.3, CW, 0.35, "SUMMARY", size=14, bold=True, color=RGBColor(0xF0, 0xA8, 0x6E))
-text(s, MX, 1.75, CW, 1.2, "Past failures get you most of the way; recent violations add the rest", size=32,
+text(s, MX, 1.75, CW, 1.2, "Past failures get you most of the way; recent violations and the area add the rest", size=32,
      bold=True, font=HEAD, color=WHITE)
 pts = [f"The history rule finds {pct(P100['baseline'], 0)} failures in the top 100, against "
        f"{pct(TP['mean_base_rate'], 0)} at random.",
        f"Logistic regression adds {diff * 100:.1f} points (95% interval +{lo * 100:.1f} to +{hi * 100:.1f}) and "
        "more violations on every quarter; the validation-selected neural net does the same.",
        "The lists differ because the model looks at how bad recent visits were, not just how often a place failed.",
-       "Adding complaint and re-inspection history lifts the model to 49.2%, confirmed under a pre-registered check."]
+       "The aha: how often inspections nearby failed recently matters almost as much as a place’s own record. "
+       "With it and complaint history the model reaches 50.6%, about 15% more failures than the rule."]
 tb = text(s, MX, 3.15, CW, 2.8, pts, size=19, color=RGBColor(0xE9, 0xED, 0xF4))
 for p in tb.text_frame.paragraphs:
     pPr = p._p.get_or_add_pPr()

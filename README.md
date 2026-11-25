@@ -231,14 +231,59 @@ date has a standard error of about 5 points; and on that date **plain logistic r
 below the history baseline (38%)**, continuing the narrowing seen in 2024–2025. The headline results
 in §6 are unchanged; this is reported as a confirmed extension.
 
+### Pre-registered confirmation: how strictly the area is being inspected right now
+
+Chicago's own 2014 model found that the inspectors who last visited an area were its strongest
+predictor ([Kannan et al. 2019](https://arxiv.org/abs/1910.04906)). The public data has no inspector
+ID, but inspectors work geographic territories. So at each decision date we measure how often routine
+inspections of **other** establishments **within 1 km** (and in the same ZIP) failed over the **last
+90, 180 and 365 days** (`food_inspections/local_features.py`; 13 features, all dated ≤ T). Tried first
+on the purged 2016–19 folds only (`experiment_local.py`), then pre-registered
+([`docs/preregistration_local.md`](docs/preregistration_local.md)) and scored once
+(`python confirm_local.py` → `results/confirm_local.json`).
+
+**The effect, on 2022–2025.** Share of establishments whose next routine inspection failed, by their
+own past-failure band (rows) and the recent local failure rate around them (columns, quintile within
+each decision date):
+
+| Own past failure ↓ / local recent failure rate → | 1 (lowest) | 2 | 3 | 4 | 5 (highest) |
+|---|---|---|---|---|---|
+| Low | 15.4% | 16.8% | 18.5% | 19.6% | **22.1%** |
+| Middle | **21.2%** | 23.3% | 23.3% | 24.7% | 27.9% |
+| High | 28.4% | 29.2% | 29.8% | 31.8% | **35.5%** |
+
+With the same track record, a place where nearby inspections have recently been failing is **about
+1.25–1.45× as likely to fail** as one in the most lenient fifth of areas, and a clean-record place in a
+strict area (22.1%) fails about as often as a middling one in a lenient area (21.2%). What is going on
+nearby matters almost as much as the restaurant's own record. The data cannot separate inspector
+strictness from neighbourhood conditions; the recent rates predict better than the long-run ZIP rate,
+which points to something that changes over time, such as inspector assignment.
+
+**The model.** Approach B's logistic regression + complaint history + local recent rates:
+
+| Precision@100 | History baseline | Logistic (B) | + complaint history | **+ local recent rates** | Neural, all features |
+|---|---|---|---|---|---|
+| Purged 2016–19 validation | 42.9% | 48.2% | 49.3% | **52.9%** | 53.0% |
+| 2022–2025, 14 dates | 44.1% | 47.4% | 49.2% | **50.6%** | 51.6% |
+| 2025-09-30, untouched for these features | 38% | 33% | 43% | **48%** | 48% |
+
+On 2022–2025 the full model beats the baseline by **+6.5 points (95% interval +4.2 to +9.1), ahead on
+11 of 14 dates**, and plain logistic by +3.2 (+2.1 to +4.6). That is **about 15% more failures found
+with the same 100 inspections** than the history rule, roughly 90 more failures over the 14 quarters.
+On the newest quarter, where plain logistic had slipped below the rule, the full model recovers to
+48%. All three pre-registered conditions held. Limits: the gain over logistic + complaint history is
++1.4 with an interval that touches zero (−0.1 to +2.0); 2025-09-30 had been scored once before for the
+complaint features; and the feature set was chosen on eight validation dates.
+
 ## 8. What this establishes — and what it cannot
 
 **Established.** On data the decision-maker could have known at each decision date, ranking by
 predicted failure probability finds about twice as many real failures in the next 100 routine
 inspections as random selection, and the transparent model beats the natural simple baseline at
 K = 100 (+3.3 points, 95% interval +1.6 to +5.1; ahead on 11 of 14 dates over three post-pandemic
-years), with more cited violations found on every date. Adding complaint and re-inspection history,
-confirmed under a pre-registered plan, lifts it to 49.2% (§7). It is a claim about **re-ordering the
+years), with more cited violations found on every date. Adding complaint and re-inspection history and the
+recent local failure rate, each confirmed under a pre-registered plan, lifts it to **50.6%**: +6.5
+points over the baseline (95% interval +4.2 to +9.1), about 15% more failures found (§7). It is a claim about **re-ordering the
 routine queue** the city actually ran.
 
 **Where the approach is fine, and where it may look fine but not be useful.** It is fine for deciding
@@ -309,6 +354,7 @@ PyArrow. Model weights download on first use (`HF_HOME` sets the cache).
 | `experiment_*.py`, `rolling_experiment.py`, `benchmark_kumo.py` | Separate experiments (§7) |
 | `docs/preregistration_nonroutine.md`, `confirm_nonroutine.py` | Pre-registered confirmation of the complaint-history features (§7) |
 | `data/raw_other_inspections_through_2025_09_30.csv.gz` | Non-routine inspections through the untouched holdout date |
+| `food_inspections/local_features.py`, `experiment_local.py`, `docs/preregistration_local.md`, `confirm_local.py` | Recent local failure rates: features, validation experiment, pre-registration, confirmation (§7) |
 | `tests/` | Unit tests |
 | `data/raw_canvass_inspections.csv.gz` | Raw routine-inspection snapshot (the submitted dataset) |
 | `data/raw_other_inspections_through_2025_06_30.csv.gz` | Non-routine inspections for the §7 experiment |
@@ -320,7 +366,7 @@ PyArrow. Model weights download on first use (`HF_HOME` sets the cache).
 | `results/feature_importance.csv`, `results/logistic_coefficients.csv` | XGBoost importance and logistic coefficients |
 | `results/shortlist_latest.csv`, `results/shortlists_all_test_dates.csv.gz` | Top-100 shortlists |
 | `results/experiment_*.json`, `results/rolling_experiment.json`, `results/kumo_*.json` | Experiment outputs |
-| `results/confirm_nonroutine.json` | Pre-registered confirmation result |
+| `results/confirm_nonroutine.json`, `results/confirm_local.json`, `results/experiment_local_validation.json` | Pre-registered confirmation results |
 | `charts/fig1..fig8.png` | Figures for the presentation |
 | `presentation/food_inspections_presentation.pptx` | The 14-slide presentation with speaker notes; rebuild from current results with `python presentation/build_presentation.py . presentation/food_inspections_presentation.pptx` (needs `python-pptx`) |
 
