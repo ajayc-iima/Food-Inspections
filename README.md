@@ -91,20 +91,33 @@ All three score the same candidate set at every decision date, so the comparison
 
 ## 5. Evaluation design
 
-- **Ranking task per decision date:** score all candidates, take the top 100, measure the share whose
-  next canvass failed. Also reported for K = 25, 50, 150, 200, 300.
-- **Reference:** the mean failure rate of all candidates at that date (picking 100 at random).
+- **What is evaluated: re-ordering the routine queue.** At each decision date the candidates are the
+  establishments the city did canvass in the following 12 months. Each approach re-orders that set,
+  and we ask whether its first 100 contain more failures. This is the design Chicago's own 2014
+  pilot used ([CDPH/DoIT](https://chicago.github.io/food-inspections-evaluation)): the same
+  inspections, in a better order. It does not tell us what would happen at places the city never
+  visited (§7).
+- **Primary metric:** Precision@100, the share of the top 100 whose next canvass failed. Also reported
+  for K = 25, 50, 150, 200, 300.
+- **Secondary metric (closer to what the department values):** the number of violations cited at the
+  top 100's next canvass. "Fail" is a pass/fail summary; violations count how much was wrong. Boston's
+  Yelp tournament and Chicago's 2014 model both scored violations rather than pass/fail.
+- **Reference:** what 100 random candidates would achieve at that date.
+- **Uncertainty:** per-date paired differences against the baseline, with a 95% moving-block
+  bootstrap interval (blocks of 4 quarters, because consecutive dates share labelled inspections).
+  The sign test across dates is also reported, but it assumes independent dates and so overstates
+  the evidence.
 - **Out-of-sample rule:** models and model selection see only 2016–2019 decision dates; 2022–2025 is
   untouched until the final evaluation.
 
 ## 6. Results (test period 2022–2025, out-of-sample)
 
-| Approach | Precision@100 (mean over 14 test dates) | × random (24.7%) | vs baseline, per date |
-|---|---|---|---|
-| Random selection (reference) | 24.7% | 1.0 | |
-| **Baseline: historical failure rate** | **44.1%** | 1.8 | |
-| **Logistic regression** | **47.8%** | 1.9 | ahead 10, tied 2, behind 2 |
-| XGBoost (selected pre-2020) | 43.8% | 1.8 | ahead 6, tied 2, behind 6 |
+| Approach | Precision@100 (mean of 14 test dates) | vs baseline: points, 95% interval | dates ahead / tied / behind | Violations cited in top 100, per date |
+|---|---|---|---|---|
+| Random selection (reference) | 24.7% | | | 402 |
+| **Baseline: historical failure rate** | **44.1%** | | | 662 |
+| **Logistic regression** | **47.8%** | **+3.6 [+2.2, +5.5]** | 10 / 2 / 2 | **735** (+74 [+64, +92]; ahead on all 14) |
+| XGBoost (selected pre-2020) | 43.8% | −0.4 [−3.1, +2.1] | 6 / 2 / 6 | 686 |
 
 In-sample (train dates) for contrast: baseline 45.3%, logistic 50.2%, XGBoost **97.1%**.
 
@@ -120,10 +133,13 @@ Precision@K over the test period (`charts/fig3_precision_at_k.png`):
 
 - *A simple rule gets far.* The historical-failure-rate baseline roughly **doubles** the failure yield
   of random selection.
-- *The transparent model adds about 3.7 points at K = 100* (47.8% vs 44.1%), ahead on 10 of 14 dates
-  (`charts/fig2_precision_at_100.png`), and its lead grows for larger shortlists. **For very short
-  lists (K ≤ 50) the baseline is better**: the establishments with the worst track record are the
-  surest bets, and the model trades some of them for more moderate-risk places.
+- *The transparent model adds about 3.6 points at K = 100* (47.8% vs 44.1%; 95% block-bootstrap
+  interval +2.2 to +5.5), ahead on 10 of 14 dates (`charts/fig2_precision_at_100.png`). That is
+  about 4 more failures per 100 inspections. Its lead grows for larger shortlists, and on the
+  secondary metric it finds about 74 more cited violations per 100 inspections, ahead on all 14
+  dates. Fourteen dates over three years is still a small sample, so read the interval as "clearly
+  positive", not as a precise size. **For very short lists (K ≤ 50) the baseline is better**: the
+  establishments with the worst track record are the surest bets.
 - *Why XGBoost reaches 97% in-sample.* Because one inspection labels ~3 consecutive rows of the same
   establishment, a deep tree ensemble can memorise labels it has seen in neighbouring rows. That
   inflates in-sample precision, and it also inflates any validation scheme whose fit and validation
@@ -148,19 +164,43 @@ Precision@K over the test period (`charts/fig3_precision_at_k.png`):
   within a few points of each other. A pre-2020 protocol that compares model families on purged
   validation therefore picks logistic regression, which is also the test-period winner. We keep
   XGBoost in the comparison as the flexible alternative, not because it would be deployed.
-- *The shortlists differ sharply.* Baseline and logistic top-100s share on average **27.5** of 100
-  establishments, baseline and XGBoost **23.6**, logistic and XGBoost **49.4** (chance overlap: 1.6)
-  — `charts/fig4_shortlist_overlap.png`, map in `charts/fig5_shortlist_map.png`. The models pull in
-  many establishments the baseline never shortlists, largely through facility type (schools,
-  long-term care) and recent violation counts (`fig6_feature_importance.png`,
-  `fig7_logistic_coefficients.png`).
+- *The shortlists differ sharply, and for a clear reason.* Baseline and logistic top-100s share on
+  average only **27.5** of 100 establishments (baseline and XGBoost 23.6, logistic and XGBoost 49.4;
+  chance overlap 1.6) — `charts/fig4_shortlist_overlap.png`. Who each picks
+  (`charts/fig8_shortlist_profiles.png`, `results/shortlist_profiles.csv`; means over all test dates):
+
+  | | Baseline only | Both | Logistic only | All candidates |
+  |---|---|---|---|---|
+  | Prior routine inspections | 9.0 | 8.9 | 4.7 | 7.7 |
+  | Prior failures | 6.1 | 6.4 | 2.3 | 1.6 |
+  | Days since last failure | 464 | 393 | 752 | 1,949 |
+  | Mean violations, last 3 inspections | 6.7 | 11.8 | 14.5 | 4.4 |
+  | Schools / grocery stores (% of group) | 18% / 6% | 9% / 10% | 3% / 15% | 12% / 6% |
+  | **Next inspection failed** | **38%** | **59%** | **43%** | 25% |
+
+  The baseline only sees *how often a place has failed*, so its extra picks are **chronic failers
+  with long histories** — many of them schools — whose recent inspections are actually fairly clean.
+  Logistic regression also weighs **how bad the recent inspections were**, so it swaps those for
+  places with fewer inspections and failures on record but **very high recent violation counts**
+  (14.5 on average), more often restaurants and grocery stores. Those fail more often next time
+  (43% vs 38%). Places strong on both counts are picked by both and fail 59% of the time. The
+  logistic coefficients (`fig7_logistic_coefficients.png`) say the same: recent violations push the
+  score up, and a long record of passed inspections pulls it down.
 
 ## 7. What this establishes — and what it cannot
 
 **Established.** On data the decision-maker could have known at each decision date, ranking by
 predicted failure probability finds about twice as many real failures in the next 100 routine
 inspections as random selection, and the transparent model beats the natural simple baseline at
-K = 100 on 10 of 14 out-of-sample dates over three post-pandemic years.
+K = 100 (+3.6 points, 95% interval +2.2 to +5.5; ahead on 10 of 14 out-of-sample dates over three
+post-pandemic years), with more cited violations found on every date. It is a claim about
+**re-ordering the routine queue** the city actually ran.
+
+**Where the approach is fine, and where it may look fine but not be useful.** It is fine for deciding
+the order of a routine queue that will be worked through anyway, which is the setting evaluated. It
+may look fine but not help (a) for very short lists, where the baseline does as well or better;
+(b) for establishments with little or no history, which never enter the candidate set; and (c) for
+finding problems at places the city does not visit, which this data cannot test.
 
 **Cannot be established (limitations).**
 
@@ -168,10 +208,19 @@ K = 100 on 10 of 14 out-of-sample dates over three post-pandemic years.
   canvassed within the follow-up window. A deployed system would score everyone, but for uninspected
   places the outcome never exists. Because canvass scheduling correlates with risk, precision on the
   inspected subset may overstate what a re-prioritised queue would find.
-- **"Failed inspection" ≠ "unsafe restaurant".** Results depend on inspector strictness and
-  establishment type; `Pass w/ Conditions` (counted as a pass) is a middle state.
-- **Regime change.** The 2018 framework change and the 2020–21 disruption both shifted behaviour;
-  any real deployment needs rolling, purged revalidation.
+- **"Failed inspection" ≠ "unsafe restaurant".** Results depend on establishment type, and
+  `Pass w/ Conditions` (counted as a pass) is a middle state. The violation-count metric is closer
+  to "how much was wrong", but it treats a minor and a critical violation alike.
+- **Inspector effects.** Who inspects, and when in the day, changes what gets cited
+  ([Kannan et al. 2019](https://arxiv.org/abs/1910.04906);
+  [Ibanez and Toffel 2020](https://pubsonline.informs.org/doi/10.1287/mnsc.2019.3318)). The
+  public data has no inspector ID, so part of what any model predicts may be inspector strictness.
+- **Regime change.** On 1 July 2018 the
+  [Chicago Food Code](https://www.chicago.gov/content/dam/city/depts/cdph/FoodProtection/ChicagoFoodCodeMajorChangesFinal2018.pdf)
+  renamed the violation classes and raised the number of possible violations from 45 to 63. Ten of
+  the 16 training dates come before that change, so violation-count features meant something
+  slightly different in training than in the 2022–2025 test. The 2020–21 disruption shifted
+  behaviour again. Any real deployment needs rolling, purged revalidation.
 - **Identity and churn.** Establishments are identified by license number; re-licensing can split or
   merge what is operationally one restaurant.
 - **Correlated examples.** An establishment contributes up to 16 training rows and each label is
@@ -179,6 +228,24 @@ K = 100 on 10 of 14 out-of-sample dates over three post-pandemic years.
   per-date comparisons are not independent.
 - **No capacity model.** We optimise a fixed K = 100; we do not model travel, scheduling, re-visit
   timing, or the cost of not inspecting someone else.
+
+### Related work
+
+- **Chicago's own model (2014).** A 16-feature logistic regression re-ordered two months of
+  canvass inspections and found critical violations about 7.4 days earlier on average
+  ([CDPH/DoIT](https://chicago.github.io/food-inspections-evaluation)). Our evaluation follows the
+  same re-ordering design.
+- **Its audit.** [Kannan, Shapiro and Bilgic (2019)](https://arxiv.org/abs/1910.04906) found the
+  largest coefficient was a dummy for one group of inspectors, which is why we flag inspector
+  effects above.
+- **History is hard to beat.** Boston's Yelp tournament
+  ([Glaeser et al. 2016](https://www.nber.org/papers/w22124)) and a re-analysis of Yelp-based
+  hygiene prediction ([Altenburger and Ho 2019](https://dho.stanford.edu/wp-content/uploads/WWW_Final.pdf))
+  both find that inspection history carries most of the signal. Our results agree: the history
+  baseline gets most of the way, and the model adds a few points.
+- **Selective labels.** Outcomes exist only where someone chose to inspect
+  ([Lakkaraju et al. 2017](https://www.cs.cornell.edu/home/kleinber/kdd17-selective.pdf)), which is
+  why we limit the claim to re-ordering.
 
 ## 8. How to run
 
@@ -204,6 +271,7 @@ pandas 3.0, scikit-learn, xgboost 3.x. Exact XGBoost numbers can move slightly a
 | `food_inspections/features.py` | Point-in-time panel construction |
 | `food_inspections/models.py` | Design matrix, logistic regression, XGBoost, purged model selection |
 | `food_inspections/evaluation.py` | Ranking, Precision@K, shortlists, summary |
+| `food_inspections/analysis.py` | Shortlist profiles and the block-bootstrap interval |
 | `food_inspections/charts.py` | Figures |
 | `food_inspections/pipeline.py` | The end-to-end run |
 | `data/raw_canvass_inspections.csv.gz` | Raw snapshot (the submitted dataset) |
@@ -213,10 +281,11 @@ pandas 3.0, scikit-learn, xgboost 3.x. Exact XGBoost numbers can move slightly a
 | `results/model_selection.csv` | Validation scores of every candidate model |
 | `results/feature_importance.csv` | XGBoost gain importance |
 | `results/logistic_coefficients.csv` | Logistic regression standardised coefficients |
+| `results/shortlist_profiles.csv`, `results/shortlist_facility_mix.csv` | Who the baseline-only, logistic-only and shared picks are |
 | `results/shortlist_latest.csv` | The three top-100 shortlists for the latest test date (2025-06-30) |
 | `results/shortlists_all_test_dates.csv.gz` | Shortlists for every test decision date |
-| `charts/fig1..fig7.png` | Figures for the presentation |
+| `charts/fig1..fig8.png` | Figures for the presentation |
 
 Figure guide: `fig1` context (inspection volume and failure rate over time) · `fig2` Precision@100 per
 decision date · `fig3` Precision@K curve · `fig4` shortlist overlap · `fig5` geography of the
-shortlists · `fig6` XGBoost feature importance · `fig7` logistic regression coefficients.
+shortlists · `fig6` XGBoost feature importance · `fig7` logistic regression coefficients · `fig8` profile of who each shortlist picks.

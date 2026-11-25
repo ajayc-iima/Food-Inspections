@@ -74,6 +74,8 @@ def features_at_date(df: pd.DataFrame, T: pd.Timestamp) -> pd.DataFrame:
 
     out["label"] = first_fut["is_fail"].reindex(out.index)
     out["days_to_next"] = (first_fut["date"].reindex(out.index) - T).dt.days
+    # violations cited at that labelled inspection (secondary outcome, never a feature)
+    out["label_viol_count"] = first_fut["viol_count"].reindex(out.index)
     out["decision_date"] = T
     out["global_rate_at_T"] = global_rate
 
@@ -96,11 +98,15 @@ def build_panel(df: pd.DataFrame) -> pd.DataFrame:
 
 def load_panel(df: pd.DataFrame, rebuild: bool = False) -> pd.DataFrame:
     """Load the cached panel, or build it from the cleaned inspections."""
+    panel = None
     if C.PANEL_FILE.exists() and not rebuild:
         print(f"[panel] loading cached panel {C.PANEL_FILE.relative_to(C.ROOT)}")
         panel = pd.read_csv(C.PANEL_FILE, parse_dates=["decision_date"],
                             dtype={"license_": str, "zip": str})
-    else:
+        if "label_viol_count" not in panel.columns:
+            print("[panel] cached panel is from an older version; rebuilding")
+            panel = None
+    if panel is None:
         print("[panel] building point-in-time examples ...")
         panel = build_panel(df)
         panel.to_csv(C.PANEL_FILE, index=False, compression="gzip")

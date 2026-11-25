@@ -168,7 +168,48 @@ def fig7_logistic_coefficients(coef: pd.Series):
     _save(fig, "fig7_logistic_coefficients.png")
 
 
-def render_all(df, panel, metrics, importance, coef):
+def fig8_shortlist_profiles(profile: pd.DataFrame, facility_mix: pd.DataFrame):
+    """Who the baseline picks that logistic does not, and vice versa."""
+    groups = ["baseline only", "both", "logistic only"]
+    colors = {"baseline only": C.COLORS["baseline"], "both": "#7b52ab",
+              "logistic only": C.COLORS["logistic"]}
+    rows = ["prior routine inspections", "prior failures", "smoothed past failure rate",
+            "mean violations, last 3 inspections", "share whose next inspection FAILED"]
+    fac = facility_mix.head(6)
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.6), constrained_layout=True)
+    ax = axes[0]
+    y = np.arange(len(rows))
+    h = 0.26
+    ref = profile.loc[rows, "all candidates"].to_numpy(dtype=float)
+    for j, g in enumerate(groups):
+        vals = profile.loc[rows, g].to_numpy(dtype=float) / ref
+        ax.barh(y + (1 - j) * h, vals, height=h, color=colors[g], label=g)
+        for yi, v, raw in zip(y + (1 - j) * h, vals, profile.loc[rows, g]):
+            ax.text(v + 0.03, yi, f"{raw:.2f}" if raw < 10 else f"{raw:.0f}",
+                    va="center", fontsize=7.5, color="#333")
+    ax.axvline(1, color="black", linestyle=":", linewidth=1)
+    ax.set_yticks(y); ax.set_yticklabels(rows, fontsize=9); ax.invert_yaxis()
+    ax.set_xlabel("Relative to the average candidate (1 = average; labels show raw means)")
+    ax.set_title("Track record of the shortlisted establishments")
+    ax.legend(fontsize=8.5, frameon=False, loc="lower right")
+    _style(ax)
+
+    ax = axes[1]
+    y = np.arange(len(fac))
+    for j, g in enumerate(groups + ["all candidates"]):
+        color = colors.get(g, "#d9d9d9")
+        ax.barh(y + (1.5 - j) * 0.2, fac[g] * 100, height=0.2, color=color, label=g)
+    ax.set_yticks(y); ax.set_yticklabels(fac.index, fontsize=9); ax.invert_yaxis()
+    ax.set_xlabel("Share of group (%)")
+    ax.set_title("Facility type")
+    ax.legend(fontsize=8.5, frameon=False, loc="lower right")
+    _style(ax)
+    fig.suptitle("Why the baseline and logistic shortlists differ (pooled over test dates)")
+    _save(fig, "fig8_shortlist_profiles.png")
+
+
+def render_all(df, panel, metrics, importance, coef, profile, facility_mix):
     C.CHARTS_DIR.mkdir(parents=True, exist_ok=True)
     fig1_context(df)
     fig2_precision_dates(metrics)
@@ -177,3 +218,4 @@ def render_all(df, panel, metrics, importance, coef):
     fig5_map(panel)
     fig6_importance(importance)
     fig7_logistic_coefficients(coef)
+    fig8_shortlist_profiles(profile, facility_mix)

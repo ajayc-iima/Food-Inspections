@@ -32,7 +32,8 @@ def mean_precision_at_k(panel: pd.DataFrame, score: pd.Series, k: int = C.K) -> 
 
 def evaluate_date(rows: pd.DataFrame) -> dict:
     out = {"n_candidates": len(rows), "base_rate": rows["label"].mean(),
-           "failures_total": int(rows["label"].sum())}
+           "failures_total": int(rows["label"].sum()),
+           "viol_per_inspection_all": rows["label_viol_count"].mean()}
     top_sets = {}
     for name in C.APPROACHES:
         ranked = rows.iloc[rank_order(rows, rows[C.SCORE_COLUMNS[name]])]
@@ -41,6 +42,7 @@ def evaluate_date(rows: pd.DataFrame) -> dict:
                 out[f"prec{k}_{name}"] = ranked["label"].head(k).mean()
         top_sets[name] = set(ranked["license_"].head(C.K))
         out[f"fails_top{C.K}_{name}"] = int(ranked["label"].head(C.K).sum())
+        out[f"viols_top{C.K}_{name}"] = int(ranked["label_viol_count"].head(C.K).sum())
     for a, b in [("baseline", "logistic"), ("baseline", "xgboost"), ("logistic", "xgboost")]:
         out[f"overlap_{a}_{b}"] = len(top_sets[a] & top_sets[b])
     return out
@@ -105,6 +107,9 @@ def summarise(df, panel, metrics, selected_xgb) -> dict:
                 for k in C.K_GRID},
             "failures_found_per_date": {
                 a: float(test_m[f"fails_top{C.K}_{a}"].mean()) for a in C.APPROACHES},
+            "violations_found_in_top_100_per_date": {
+                **{a: float(test_m[f"viols_top{C.K}_{a}"].mean()) for a in C.APPROACHES},
+                "random (expected)": float((test_m["viol_per_inspection_all"] * C.K).mean())},
             "logistic_vs_baseline_at_100": paired("logistic", "baseline", test_m),
             "xgboost_vs_baseline_at_100": paired("xgboost", "baseline", test_m),
             "mean_overlap": {

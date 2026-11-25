@@ -5,6 +5,7 @@ import time
 import pandas as pd
 
 from . import charts, config as C
+from .analysis import shortlist_profiles, uncertainty
 from .data import clean, load_raw
 from .evaluation import run_evaluation, shortlists, summarise
 from .features import load_panel
@@ -62,12 +63,18 @@ def run(refresh: bool = False, rebuild_panel: bool = False) -> dict:
     latest = sl[sl["decision_date"] == sl["decision_date"].max()]
     latest[keep].to_csv(C.RESULTS_DIR / "shortlist_latest.csv", index=False)
 
+    profile, facility_mix = shortlist_profiles(panel, "baseline", "logistic")
+    profile.to_csv(C.RESULTS_DIR / "shortlist_profiles.csv", index_label="feature (mean)")
+    facility_mix.to_csv(C.RESULTS_DIR / "shortlist_facility_mix.csv", index_label="facility")
+
     summary = summarise(df, panel, metrics, selected)
+    summary["test_period"]["uncertainty_logistic_vs_baseline"] = uncertainty(metrics, "logistic")
+    summary["test_period"]["uncertainty_xgboost_vs_baseline"] = uncertainty(metrics, "xgboost")
     with open(C.RESULTS_DIR / "metrics_summary.json", "w") as f:
         json.dump(summary, f, indent=2)
 
     print("[charts] rendering figures ...")
-    charts.render_all(df, panel, metrics, importance, coef)
+    charts.render_all(df, panel, metrics, importance, coef, profile, facility_mix)
 
     tp = summary["test_period"]
     print("\n============ HEADLINE RESULTS (test period 2022-2025, out-of-sample) ============")
@@ -79,5 +86,11 @@ def run(refresh: bool = False, rebuild_panel: bool = False) -> dict:
     print(f"logistic vs baseline: {lv['mean_difference'] * 100:+.1f} points; ahead on "
           f"{lv['dates_ahead']}, tied on {lv['dates_tied']}, behind on {lv['dates_behind']} of "
           f"{len(C.TEST_DATES)} dates")
+    u = tp["uncertainty_logistic_vs_baseline"]["precision_at_100"]
+    lo, hi = u["ci95_block_bootstrap"]
+    print(f"  95% block-bootstrap interval: [{lo * 100:+.1f}, {hi * 100:+.1f}] points")
+    v = tp["violations_found_in_top_100_per_date"]
+    print("violations cited in the top 100 per date: " +
+          ", ".join(f"{k} {x:.0f}" for k, x in v.items()))
     print(f"total runtime: {time.time() - t0:.0f}s")
     return summary

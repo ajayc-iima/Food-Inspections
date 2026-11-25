@@ -99,6 +99,12 @@
       "logistic": 47.785714285714285,
       "xgboost": 43.785714285714285
     },
+    "violations_found_in_top_100_per_date": {
+      "baseline": 661.7142857142857,
+      "logistic": 735.3571428571429,
+      "xgboost": 685.7857142857143,
+      "random (expected)": 401.6347810302896
+    },
     "logistic_vs_baseline_at_100": {
       "mean_difference": 0.03642857142857143,
       "dates_ahead": 10,
@@ -117,7 +123,57 @@
       "logistic_xgboost": 49.42857142857143
     },
     "chance_overlap": 1.6091335948998682,
-    "total_failures_per_date": 1537.2857142857142
+    "total_failures_per_date": 1537.2857142857142,
+    "uncertainty_logistic_vs_baseline": {
+      "block_length_quarters": 4,
+      "precision_at_100": {
+        "mean_difference": 0.03642857142857143,
+        "ci95_block_bootstrap": [
+          0.02214285714285715,
+          0.055000000000000014
+        ],
+        "dates_ahead": 10,
+        "dates_tied": 2,
+        "dates_behind": 2,
+        "sign_test_p_if_dates_independent": 0.03857421875
+      },
+      "violations_in_top_100": {
+        "mean_difference": 73.64285714285714,
+        "ci95_block_bootstrap": [
+          63.714285714285715,
+          91.64285714285714
+        ],
+        "dates_ahead": 14,
+        "dates_tied": 0,
+        "dates_behind": 0,
+        "sign_test_p_if_dates_independent": 0.0001220703125
+      }
+    },
+    "uncertainty_xgboost_vs_baseline": {
+      "block_length_quarters": 4,
+      "precision_at_100": {
+        "mean_difference": -0.0035714285714285704,
+        "ci95_block_bootstrap": [
+          -0.03142857142857142,
+          0.02071428571428571
+        ],
+        "dates_ahead": 6,
+        "dates_tied": 2,
+        "dates_behind": 6,
+        "sign_test_p_if_dates_independent": 1.0
+      },
+      "violations_in_top_100": {
+        "mean_difference": 24.071428571428573,
+        "ci95_block_bootstrap": [
+          5.142857142857143,
+          56.07142857142857
+        ],
+        "dates_ahead": 10,
+        "dates_tied": 0,
+        "dates_behind": 4,
+        "sign_test_p_if_dates_independent": 0.1795654296875
+      }
+    }
   },
   "train_period_in_sample": {
     "mean_base_rate": 0.23255486052089402,
