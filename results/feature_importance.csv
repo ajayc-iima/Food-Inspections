@@ -1,0 +1,27 @@
+,importance
+viol_mean_last3,0.07449906
+fac_School,0.07040854
+fac_Long Term Care,0.061561037
+viol_last,0.056555253
+fac_Other,0.04793781
+zip_hist_fail_rate,0.04579103
+hist_fail_rate_smooth,0.045747124
+fac_Bakery,0.04548793
+fac_Restaurant,0.04370058
+risk_latest,0.039878033
+n_outcome_prev,0.039815657
+viol_mean_24m,0.03871442
+n_canvass_prev,0.038609102
+n_fail_prev,0.038119223
+fac_Grocery Store,0.036455255
+days_since_first_canvass,0.0352087
+fail_rate_24m,0.035073314
+n_canvass_24m,0.034089353
+days_since_last_fail,0.033003785
+n_fail_24m,0.03178571
+fac_Hospital,0.030806083
+days_since_last_canvass,0.02959222
+has_failed_before,0.025984243
+fac_Banquet,0.012717232
+fac_Shared Kitchen,0.008459352
+fac_Mobile Food Dispenser,0.0

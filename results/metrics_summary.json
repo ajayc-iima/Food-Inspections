@@ -1,0 +1,130 @@
+{
+  "dataset": {
+    "source": "https://data.cityofchicago.org/Health-Human-Services/Food-Inspections/4ijn-s7e5",
+    "rows_routine_inspections": 163316,
+    "establishments": 36991,
+    "date_min": "2010-01-04",
+    "date_max": "2026-11-20"
+  },
+  "panel": {
+    "train_examples": 100130,
+    "test_examples": 87797,
+    "train_decision_dates": [
+      "2016-03-31",
+      "2016-06-30",
+      "2016-09-30",
+      "2016-12-31",
+      "2017-03-31",
+      "2017-06-30",
+      "2017-09-30",
+      "2017-12-31",
+      "2018-03-31",
+      "2018-06-30",
+      "2018-09-30",
+      "2018-12-31",
+      "2019-03-31",
+      "2019-06-30",
+      "2019-09-30",
+      "2019-12-31"
+    ],
+    "test_decision_dates": [
+      "2022-03-31",
+      "2022-06-30",
+      "2022-09-30",
+      "2022-12-31",
+      "2023-03-31",
+      "2023-06-30",
+      "2023-09-30",
+      "2023-12-31",
+      "2024-03-31",
+      "2024-06-30",
+      "2024-09-30",
+      "2024-12-31",
+      "2025-03-31",
+      "2025-06-30"
+    ],
+    "label_window_days": 365,
+    "K": 100,
+    "train_labels_from_2020_inspections": 12530,
+    "mean_rows_per_labelled_inspection": 3.0440916821900057
+  },
+  "xgboost_selected_config": {
+    "name": "d6-500-mcw5",
+    "params": {
+      "max_depth": 6,
+      "n_estimators": 500,
+      "learning_rate": 0.05,
+      "subsample": 0.9,
+      "colsample_bytree": 0.8,
+      "min_child_weight": 5,
+      "reg_lambda": 1.0
+    }
+  },
+  "test_period": {
+    "mean_base_rate": 0.24695647837523277,
+    "precision_at_k": {
+      "25": {
+        "baseline": 0.5371428571428571,
+        "logistic": 0.4942857142857144,
+        "xgboost": 0.47714285714285726
+      },
+      "50": {
+        "baseline": 0.4914285714285715,
+        "logistic": 0.47285714285714286,
+        "xgboost": 0.4571428571428572
+      },
+      "100": {
+        "baseline": 0.44142857142857145,
+        "logistic": 0.4778571428571429,
+        "xgboost": 0.4378571428571429
+      },
+      "150": {
+        "baseline": 0.41,
+        "logistic": 0.4576190476190476,
+        "xgboost": 0.418095238095238
+      },
+      "200": {
+        "baseline": 0.3921428571428572,
+        "logistic": 0.44249999999999995,
+        "xgboost": 0.4185714285714286
+      },
+      "300": {
+        "baseline": 0.39190476190476187,
+        "logistic": 0.4371428571428572,
+        "xgboost": 0.4107142857142857
+      }
+    },
+    "failures_found_per_date": {
+      "baseline": 44.142857142857146,
+      "logistic": 47.785714285714285,
+      "xgboost": 43.785714285714285
+    },
+    "logistic_vs_baseline_at_100": {
+      "mean_difference": 0.03642857142857143,
+      "dates_ahead": 10,
+      "dates_tied": 2,
+      "dates_behind": 2
+    },
+    "xgboost_vs_baseline_at_100": {
+      "mean_difference": -0.0035714285714285704,
+      "dates_ahead": 6,
+      "dates_tied": 2,
+      "dates_behind": 6
+    },
+    "mean_overlap": {
+      "baseline_logistic": 27.5,
+      "baseline_xgboost": 23.642857142857142,
+      "logistic_xgboost": 49.42857142857143
+    },
+    "chance_overlap": 1.6091335948998682,
+    "total_failures_per_date": 1537.2857142857142
+  },
+  "train_period_in_sample": {
+    "mean_base_rate": 0.23255486052089402,
+    "precision_at_100": {
+      "baseline": 0.4525,
+      "logistic": 0.501875,
+      "xgboost": 0.970625
+    }
+  }
+}
