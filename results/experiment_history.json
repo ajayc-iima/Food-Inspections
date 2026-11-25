@@ -1,0 +1,83 @@
+{
+  "description": "Exploratory historical feature comparison on purged training folds only",
+  "features_added": [
+    "last_outcome_fail",
+    "last_outcome_conditional",
+    "days_since_last_outcome",
+    "last3_fails",
+    "last3_conditional",
+    "outcomes_12m",
+    "fails_12m",
+    "conditional_12m",
+    "prior_outcome_viol_count",
+    "outcome_viol_delta",
+    "days_since_last_conditional",
+    "ever_conditional"
+  ],
+  "context": "Features use only historical outcome-bearing inspections dated <= decision date",
+  "folds": {
+    "P1: fit 2016-17 -> val 2019": {
+      "logistic C=0.01 + original": 0.505,
+      "logistic C=0.01 + history": 0.53,
+      "neural 16-8 alpha=10 + original": 0.5175000000000001,
+      "neural 16-8 alpha=10 + history": 0.5325,
+      "neural 16-8 alpha=10 max_iter=150 + history": 0.5225
+    },
+    "P2: fit 2016 -> val 2018": {
+      "logistic C=0.01 + original": 0.47,
+      "logistic C=0.01 + history": 0.4775,
+      "neural 16-8 alpha=10 + original": 0.495,
+      "neural 16-8 alpha=10 + history": 0.5,
+      "neural 16-8 alpha=10 max_iter=150 + history": 0.49
+    }
+  },
+  "fit_details": {
+    "P1: fit 2016-17 -> val 2019": {
+      "neural 16-8 alpha=10 + original": {
+        "epochs": 40,
+        "max_epochs": 60,
+        "reached_epoch_limit": false,
+        "final_training_loss": 0.5389851601093741
+      },
+      "neural 16-8 alpha=10 + history": {
+        "epochs": 60,
+        "max_epochs": 60,
+        "reached_epoch_limit": true,
+        "final_training_loss": 0.5398293081654123
+      },
+      "neural 16-8 alpha=10 max_iter=150 + history": {
+        "epochs": 75,
+        "max_epochs": 150,
+        "reached_epoch_limit": false,
+        "final_training_loss": 0.5388586826136388
+      }
+    },
+    "P2: fit 2016 -> val 2018": {
+      "neural 16-8 alpha=10 + original": {
+        "epochs": 57,
+        "max_epochs": 60,
+        "reached_epoch_limit": false,
+        "final_training_loss": 0.5459090030353312
+      },
+      "neural 16-8 alpha=10 + history": {
+        "epochs": 60,
+        "max_epochs": 60,
+        "reached_epoch_limit": true,
+        "final_training_loss": 0.5509984672450371
+      },
+      "neural 16-8 alpha=10 max_iter=150 + history": {
+        "epochs": 91,
+        "max_epochs": 150,
+        "reached_epoch_limit": false,
+        "final_training_loss": 0.5471192986112582
+      }
+    }
+  },
+  "mean_purged_precision_at_100": {
+    "logistic C=0.01 + original": 0.4875,
+    "logistic C=0.01 + history": 0.50375,
+    "neural 16-8 alpha=10 + original": 0.5062500000000001,
+    "neural 16-8 alpha=10 + history": 0.51625,
+    "neural 16-8 alpha=10 max_iter=150 + history": 0.50625
+  }
+}

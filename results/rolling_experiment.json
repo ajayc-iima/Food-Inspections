@@ -1,0 +1,452 @@
+{
+  "status": "complete",
+  "complete": true,
+  "interpretation": "Exploratory, previously examined periods and overlapping outcomes; retrospective observed-inspection subset, not a deployment queue.",
+  "eligibility_rule": "training decision_date + 365 days <= evaluation decision_date",
+  "policies": {
+    "historical": "2016\u20132019 training dates only, fitted once",
+    "expanding": "historical dates plus fully mature 2022-onward panel dates",
+    "recent": "fully mature 2022-onward panel dates only"
+  },
+  "dates": {
+    "2023-03-31": {
+      "n_candidates": 5780,
+      "base_rate": 0.2773356401384083,
+      "baseline_precision_at_100": 0.51,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 5508,
+        "expanding": 105638
+      },
+      "latest_recent_training_decision_date": "2022-03-31",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.54,
+          "neural": 0.54,
+          "xgboost": 0.54
+        },
+        "expanding": {
+          "logistic": 0.54,
+          "neural": 0.56,
+          "xgboost": 0.56
+        },
+        "recent": {
+          "logistic": 0.53,
+          "neural": 0.45,
+          "xgboost": 0.41
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 24,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 60,
+          "iteration_limit": 60
+        }
+      }
+    },
+    "2023-06-30": {
+      "n_candidates": 5963,
+      "base_rate": 0.2740231427133993,
+      "baseline_precision_at_100": 0.52,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 10905,
+        "expanding": 111035
+      },
+      "latest_recent_training_decision_date": "2022-06-30",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.57,
+          "neural": 0.58,
+          "xgboost": 0.55
+        },
+        "expanding": {
+          "logistic": 0.56,
+          "neural": 0.56,
+          "xgboost": 0.47
+        },
+        "recent": {
+          "logistic": 0.51,
+          "neural": 0.47,
+          "xgboost": 0.34
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 24,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 60,
+          "iteration_limit": 60
+        }
+      }
+    },
+    "2023-09-30": {
+      "n_candidates": 6370,
+      "base_rate": 0.25274725274725274,
+      "baseline_precision_at_100": 0.46,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 16383,
+        "expanding": 116513
+      },
+      "latest_recent_training_decision_date": "2022-09-30",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.5,
+          "neural": 0.51,
+          "xgboost": 0.46
+        },
+        "expanding": {
+          "logistic": 0.49,
+          "neural": 0.5,
+          "xgboost": 0.36
+        },
+        "recent": {
+          "logistic": 0.47,
+          "neural": 0.46,
+          "xgboost": 0.4
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 26,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 60,
+          "iteration_limit": 60
+        }
+      }
+    },
+    "2023-12-31": {
+      "n_candidates": 7197,
+      "base_rate": 0.23551479783243018,
+      "baseline_precision_at_100": 0.4,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 22635,
+        "expanding": 122765
+      },
+      "latest_recent_training_decision_date": "2022-12-31",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.46,
+          "neural": 0.47,
+          "xgboost": 0.4
+        },
+        "expanding": {
+          "logistic": 0.46,
+          "neural": 0.45,
+          "xgboost": 0.34
+        },
+        "recent": {
+          "logistic": 0.47,
+          "neural": 0.45,
+          "xgboost": 0.38
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 29,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 60,
+          "iteration_limit": 60
+        }
+      }
+    },
+    "2024-03-31": {
+      "n_candidates": 6961,
+      "base_rate": 0.2239620744145956,
+      "baseline_precision_at_100": 0.42,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 28415,
+        "expanding": 128545
+      },
+      "latest_recent_training_decision_date": "2023-03-31",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.47,
+          "neural": 0.48,
+          "xgboost": 0.45
+        },
+        "expanding": {
+          "logistic": 0.48,
+          "neural": 0.47,
+          "xgboost": 0.4
+        },
+        "recent": {
+          "logistic": 0.46,
+          "neural": 0.48,
+          "xgboost": 0.35
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 22,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 60,
+          "iteration_limit": 60
+        }
+      }
+    },
+    "2024-06-30": {
+      "n_candidates": 6848,
+      "base_rate": 0.21714369158878505,
+      "baseline_precision_at_100": 0.41,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 34378,
+        "expanding": 134508
+      },
+      "latest_recent_training_decision_date": "2023-06-30",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.49,
+          "neural": 0.51,
+          "xgboost": 0.47
+        },
+        "expanding": {
+          "logistic": 0.46,
+          "neural": 0.5,
+          "xgboost": 0.35
+        },
+        "recent": {
+          "logistic": 0.5,
+          "neural": 0.47,
+          "xgboost": 0.35
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 21,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 52,
+          "iteration_limit": 60
+        }
+      }
+    },
+    "2024-09-30": {
+      "n_candidates": 6830,
+      "base_rate": 0.22005856515373354,
+      "baseline_precision_at_100": 0.43,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 40748,
+        "expanding": 140878
+      },
+      "latest_recent_training_decision_date": "2023-09-30",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.45,
+          "neural": 0.48,
+          "xgboost": 0.41
+        },
+        "expanding": {
+          "logistic": 0.46,
+          "neural": 0.5,
+          "xgboost": 0.42
+        },
+        "recent": {
+          "logistic": 0.47,
+          "neural": 0.45,
+          "xgboost": 0.43
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 23,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 44,
+          "iteration_limit": 60
+        }
+      }
+    },
+    "2024-12-31": {
+      "n_candidates": 7023,
+      "base_rate": 0.22098818168873702,
+      "baseline_precision_at_100": 0.44,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 47945,
+        "expanding": 148075
+      },
+      "latest_recent_training_decision_date": "2023-12-31",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.43,
+          "neural": 0.45,
+          "xgboost": 0.41
+        },
+        "expanding": {
+          "logistic": 0.46,
+          "neural": 0.44,
+          "xgboost": 0.39
+        },
+        "recent": {
+          "logistic": 0.43,
+          "neural": 0.41,
+          "xgboost": 0.39
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 20,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 41,
+          "iteration_limit": 60
+        }
+      }
+    },
+    "2025-03-31": {
+      "n_candidates": 6237,
+      "base_rate": 0.22077922077922077,
+      "baseline_precision_at_100": 0.41,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 54906,
+        "expanding": 155036
+      },
+      "latest_recent_training_decision_date": "2024-03-31",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.42,
+          "neural": 0.37,
+          "xgboost": 0.37
+        },
+        "expanding": {
+          "logistic": 0.41,
+          "neural": 0.36,
+          "xgboost": 0.34
+        },
+        "recent": {
+          "logistic": 0.39,
+          "neural": 0.36,
+          "xgboost": 0.33
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 24,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 35,
+          "iteration_limit": 60
+        }
+      }
+    },
+    "2025-06-30": {
+      "n_candidates": 5953,
+      "base_rate": 0.21955316647068704,
+      "baseline_precision_at_100": 0.4,
+      "training_rows": {
+        "historical": 100130,
+        "recent": 61754,
+        "expanding": 161884
+      },
+      "latest_recent_training_decision_date": "2024-06-30",
+      "precision_at_100": {
+        "historical": {
+          "logistic": 0.38,
+          "neural": 0.35,
+          "xgboost": 0.41
+        },
+        "expanding": {
+          "logistic": 0.35,
+          "neural": 0.33,
+          "xgboost": 0.34
+        },
+        "recent": {
+          "logistic": 0.36,
+          "neural": 0.36,
+          "xgboost": 0.35
+        }
+      },
+      "neural_training_iterations": {
+        "historical": {
+          "iterations": 28,
+          "iteration_limit": 60
+        },
+        "expanding": {
+          "iterations": 21,
+          "iteration_limit": 60
+        },
+        "recent": {
+          "iterations": 30,
+          "iteration_limit": 60
+        }
+      }
+    }
+  },
+  "mean_precision_at_100": {
+    "historical": {
+      "logistic": 0.471,
+      "neural": 0.4739999999999999,
+      "xgboost": 0.44699999999999995
+    },
+    "expanding": {
+      "logistic": 0.4669999999999999,
+      "neural": 0.4670000000000001,
+      "xgboost": 0.39699999999999996
+    },
+    "recent": {
+      "logistic": 0.45899999999999996,
+      "neural": 0.43600000000000005,
+      "xgboost": 0.373
+    }
+  },
+  "mean_baseline_precision_at_100": 0.44000000000000006,
+  "elapsed_seconds": 96.39000000001397
+}

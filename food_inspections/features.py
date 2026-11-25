@@ -8,14 +8,17 @@ import pandas as pd
 
 from . import config as C
 
+# Increment when the meaning or calculation of cached panel features changes.
+PANEL_FEATURE_VERSION = 2
+
 
 def features_at_date(df: pd.DataFrame, T: pd.Timestamp) -> pd.DataFrame:
     hist = df[df["date"] <= T]
     fut = df[(df["date"] > T) & (df["date"] <= T + pd.Timedelta(days=C.LABEL_WINDOW_DAYS))
              & df["is_outcome"]]
 
-    n_all, f_all = len(hist), int(hist["is_fail"].sum())
-    global_rate = f_all / n_all if n_all else 0.0
+    outcomes = hist[hist["is_outcome"]]
+    global_rate = float(outcomes["is_fail"].mean()) if len(outcomes) else 0.0
 
     gb = hist.groupby("license_")
     agg = pd.DataFrame({
@@ -34,11 +37,12 @@ def features_at_date(df: pd.DataFrame, T: pd.Timestamp) -> pd.DataFrame:
     recent = T - pd.Timedelta(days=C.HISTORY_WINDOW_DAYS)
     agg["viol_mean_24m"] = v[v["date"] > recent].groupby("license_")["viol_count"].mean()
     c24 = hist[hist["date"] > recent].groupby("license_").agg(
-        n_canvass_24m=("is_fail", "size"), n_fail_24m=("is_fail", "sum"))
+        n_canvass_24m=("is_fail", "size"), n_outcome_24m=("is_outcome", "sum"),
+        n_fail_24m=("is_fail", "sum"))
     agg = agg.join(c24)
 
     # point-in-time zip-level failure rate (smoothed toward the global rate)
-    z = hist[hist["zip"].notna()].groupby("zip")["is_fail"].agg(["sum", "count"])
+    z = outcomes[outcomes["zip"].notna()].groupby("zip")["is_fail"].agg(["sum", "count"])
     zip_rate = (z["sum"] + C.SMOOTH_ZIP * global_rate) / (z["count"] + C.SMOOTH_ZIP)
 
     lastrow = hist.groupby("license_").tail(1).set_index("license_")
@@ -57,8 +61,8 @@ def features_at_date(df: pd.DataFrame, T: pd.Timestamp) -> pd.DataFrame:
     out["has_failed_before"] = (agg["n_fail_prev"] > 0).astype(int)
     out["n_canvass_24m"] = agg["n_canvass_24m"].fillna(0)
     out["n_fail_24m"] = agg["n_fail_24m"].fillna(0)
-    out["fail_rate_24m"] = np.where(out["n_canvass_24m"] > 0,
-                                    out["n_fail_24m"] / out["n_canvass_24m"], 0.0)
+    n_outcome_24m = agg["n_outcome_24m"].fillna(0)
+    out["fail_rate_24m"] = (out["n_fail_24m"] / n_outcome_24m.replace(0, np.nan)).fillna(0.0)
     out["viol_last"] = agg["viol_last"].fillna(0)
     out["viol_mean_last3"] = agg["viol_mean_last3"].fillna(0)
     out["viol_mean_24m"] = agg["viol_mean_24m"].fillna(0)
@@ -103,12 +107,14 @@ def load_panel(df: pd.DataFrame, rebuild: bool = False) -> pd.DataFrame:
         print(f"[panel] loading cached panel {C.PANEL_FILE.relative_to(C.ROOT)}")
         panel = pd.read_csv(C.PANEL_FILE, parse_dates=["decision_date"],
                             dtype={"license_": str, "zip": str})
-        if "label_viol_count" not in panel.columns:
-            print("[panel] cached panel is from an older version; rebuilding")
+        if ("label_viol_count" not in panel.columns or "panel_feature_version" not in panel.columns
+                or panel.empty or not panel["panel_feature_version"].eq(PANEL_FEATURE_VERSION).all()):
+            print("[panel] cached panel has an incompatible feature version; rebuilding")
             panel = None
     if panel is None:
         print("[panel] building point-in-time examples ...")
         panel = build_panel(df)
+        panel["panel_feature_version"] = PANEL_FEATURE_VERSION
         panel.to_csv(C.PANEL_FILE, index=False, compression="gzip")
     # date of the inspection that supplies the label (used for purging checks)
     panel["label_date"] = panel["decision_date"] + pd.to_timedelta(panel["days_to_next"], unit="D")

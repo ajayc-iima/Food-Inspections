@@ -112,6 +112,7 @@ def summarise(df, panel, metrics, selected_xgb) -> dict:
                 "random (expected)": float((test_m["viol_per_inspection_all"] * C.K).mean())},
             "logistic_vs_baseline_at_100": paired("logistic", "baseline", test_m),
             "xgboost_vs_baseline_at_100": paired("xgboost", "baseline", test_m),
+            "selected_vs_baseline_at_100": paired("selected", "baseline", test_m),
             "mean_overlap": {
                 p: float(test_m[f"overlap_{p}"].mean())
                 for p in ["baseline_logistic", "baseline_xgboost", "logistic_xgboost"]},

@@ -1,0 +1,58 @@
+{
+  "description": "Separate exploratory non-routine inspection feature comparison",
+  "source": "https://data.cityofchicago.org/Health-Human-Services/Food-Inspections/4ijn-s7e5",
+  "source_note": "Downloaded after the original snapshot; inspection dates are known, but later publication or record corrections cannot be ruled out.",
+  "other_raw_sha256": "9fa84b3f09088f159310c05bb477cdd10ebafdf2ad5c47b611828e676158d3eb",
+  "original_panel_sha256": "d133349ebbb31c53f6b62d5842535e9fe9300f7d39e9e86417b6af88f4aae6ae",
+  "other_cleaned_rows": 140864,
+  "features": [
+    "nr_total",
+    "nr_fail",
+    "nr_complaint_total",
+    "nr_complaint_fail",
+    "nr_12m",
+    "nr_fail_12m",
+    "nr_complaint_12m",
+    "nr_complaint_fail_12m",
+    "nr_reinspect_12m",
+    "nr_reinspect_fail_12m",
+    "nr_days_last",
+    "nr_days_last_fail",
+    "nr_days_last_complaint",
+    "nr_last_failed",
+    "nr_viol_last"
+  ],
+  "folds": {
+    "P1: fit 2016-17 -> val 2019": {
+      "logistic_original": 0.505,
+      "logistic_nonroutine": 0.5375000000000001,
+      "neural_original": 0.5175000000000001,
+      "neural_original_epochs": 40,
+      "neural_nonroutine": 0.55,
+      "neural_nonroutine_epochs": 60
+    },
+    "P2: fit 2016 -> val 2018": {
+      "logistic_original": 0.46,
+      "logistic_nonroutine": 0.4475,
+      "neural_original": 0.495,
+      "neural_original_epochs": 57,
+      "neural_nonroutine": 0.47500000000000003,
+      "neural_nonroutine_epochs": 60
+    }
+  },
+  "validation_means": {
+    "logistic_original": 0.48250000000000004,
+    "logistic_nonroutine": 0.49250000000000005,
+    "neural_original": 0.5062500000000001,
+    "neural_nonroutine": 0.5125000000000001
+  },
+  "exploratory_test": {
+    "note": "Previously examined 2022-2025 decision dates; not an untouched test.",
+    "logistic_original": 0.4735714285714286,
+    "logistic_nonroutine": 0.49214285714285716,
+    "neural_original": 0.47500000000000003,
+    "neural_original_epochs": 28,
+    "neural_nonroutine": 0.49857142857142867,
+    "neural_nonroutine_epochs": 48
+  }
+}

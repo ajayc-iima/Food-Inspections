@@ -1,0 +1,82 @@
+{
+  "description": "Exploratory validation of past violation heading topics",
+  "features": [
+    "topic_last_pest",
+    "topic_last_temperature",
+    "topic_last_hand_hygiene",
+    "topic_last_manager",
+    "topic_last_prior_violation",
+    "topic_last_food_contamination",
+    "topic_last_sanitation",
+    "topic_last_plumbing",
+    "topic_last3_mean_pest",
+    "topic_last3_mean_temperature",
+    "topic_last3_mean_hand_hygiene",
+    "topic_last3_mean_manager",
+    "topic_last3_mean_prior_violation",
+    "topic_last3_mean_food_contamination",
+    "topic_last3_mean_sanitation",
+    "topic_last3_mean_plumbing"
+  ],
+  "topic_patterns": {
+    "pest": "RODENT|INSECT|VERMIN|PEST",
+    "temperature": "TEMPERATURE|THERMOMETER|COLD HOLD|HOT HOLD|COOLING",
+    "hand_hygiene": "HAND\\s?WASH|HANDS WASH|HAND SINK",
+    "manager": "CERTIFIED FOOD MANAGER|FOOD SERVICE SANITATION CERTIFICATE|PERSON IN CHARGE",
+    "prior_violation": "PREVIOUS.*VIOLATION",
+    "food_contamination": "CONTAMINATION|FOOD PROTECTED|CROSS.CONTAM|FOOD SOURCE|ADULTERATED|UNSAFE FOOD",
+    "sanitation": "SANITI[ZS]|FOOD CONTACT.*CLEAN|FOOD.CONTACT SURFACES",
+    "plumbing": "PLUMBING|WATER SOURCE|WATER SUPPLY|SEWAGE|BACKFLOW"
+  },
+  "limitations": [
+    "Quarterly rows can share labels",
+    "Heading definitions changed in 2018",
+    "These validation folds have been examined during development"
+  ],
+  "folds": {
+    "P1: fit 2016-17 -> val 2019": {
+      "logistic_original": 0.505,
+      "logistic_topics": 0.515,
+      "neural_original": 0.5175000000000001,
+      "neural_topics": 0.5125
+    },
+    "P2: fit 2016 -> val 2018": {
+      "logistic_original": 0.47,
+      "logistic_topics": 0.47000000000000003,
+      "neural_original": 0.495,
+      "neural_topics": 0.48
+    }
+  },
+  "fit_details": {
+    "P1: fit 2016-17 -> val 2019": {
+      "neural_original": {
+        "epochs": 40,
+        "max_epochs": 60,
+        "convergence_warning": false
+      },
+      "neural_topics": {
+        "epochs": 29,
+        "max_epochs": 60,
+        "convergence_warning": false
+      }
+    },
+    "P2: fit 2016 -> val 2018": {
+      "neural_original": {
+        "epochs": 57,
+        "max_epochs": 60,
+        "convergence_warning": false
+      },
+      "neural_topics": {
+        "epochs": 45,
+        "max_epochs": 60,
+        "convergence_warning": false
+      }
+    }
+  },
+  "mean_purged_precision_at_100": {
+    "logistic_original": 0.4875,
+    "logistic_topics": 0.49250000000000005,
+    "neural_original": 0.5062500000000001,
+    "neural_topics": 0.49624999999999997
+  }
+}

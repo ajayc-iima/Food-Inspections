@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Print the pre-2020 XGBoost model-selection table on its own.
+"""Print the model-selection table for 2016–2019 decision dates on its own.
 
 run_project.py already runs this step and saves results/model_selection.csv;
 this script is for looking at the selection without the rest of the pipeline.
@@ -14,17 +14,18 @@ validation labels were already seen in fitting.
 from food_inspections import config as C
 from food_inspections.data import clean, load_raw
 from food_inspections.features import load_panel
-from food_inspections.models import design_matrix, select_xgboost
+from food_inspections.models import design_matrix, select_model
 
 
 def main():
     panel = load_panel(clean(load_raw()))
     train = panel[panel["period"] == "train"]
-    selected, table = select_xgboost(train, design_matrix(panel)[panel["period"] == "train"])
+    selected, selected_xgb, table = select_model(train, design_matrix(panel)[panel["period"] == "train"])
     C.RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     table.to_csv(C.RESULTS_DIR / "model_selection.csv", index_label="config")
     print(table.round(3).to_string())
     print(f"\nSELECTED: {selected}")
+    print(f"XGBOOST REFERENCE: {selected_xgb}")
 
 
 if __name__ == "__main__":

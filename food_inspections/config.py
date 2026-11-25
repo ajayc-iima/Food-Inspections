@@ -59,14 +59,18 @@ CATEGORICAL_FEATURE = "facility_grouped"
 # --------------------------------------------------------------------------
 # Approaches
 # --------------------------------------------------------------------------
-APPROACHES = ["baseline", "logistic", "xgboost"]
+APPROACHES = ["baseline", "logistic", "xgboost", "neural", "extra_trees", "selected"]
 SCORE_COLUMNS = {"baseline": "hist_fail_rate_smooth",
                  "logistic": "score_logistic",
-                 "xgboost": "score_xgboost"}
-COLORS = {"baseline": "#7f7f7f", "logistic": "#1f77b4", "xgboost": "#d62728"}
+                 "xgboost": "score_xgboost", "neural": "score_neural",
+                 "extra_trees": "score_extra_trees", "selected": "score_selected"}
+COLORS = {"baseline": "#7f7f7f", "logistic": "#1f77b4", "xgboost": "#d62728",
+          "neural": "#9467bd", "extra_trees": "#ff7f0e", "selected": "#2ca02c"}
 APPROACH_LABELS = {"baseline": "Baseline: historical failure rate",
                    "logistic": "Logistic regression",
-                   "xgboost": "XGBoost"}
+                   "xgboost": "XGBoost", "neural": "Neural network",
+                   "extra_trees": "Extra Trees",
+                   "selected": "Validation-selected model"}
 
 # Candidate XGBoost configurations for pre-2020 model selection.
 XGB_CONFIGS = {

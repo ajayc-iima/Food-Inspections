@@ -3,6 +3,9 @@ __pycache__/
 .ipynb_checkpoints/
 .venv/
 venv/
+.python-x64/
+.python-x64.zip
+.kumo-cache/
 .DS_Store
 Thumbs.db
 desktop.ini

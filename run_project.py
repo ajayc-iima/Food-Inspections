@@ -3,8 +3,8 @@
 
 Runs the whole project on the City of Chicago Food Inspections data:
 download (or reuse the cached snapshot) -> clean -> point-in-time panel ->
-pre-2020 model selection -> baseline / logistic / XGBoost -> Precision@K on
-2022-2025 -> results/ and charts/.
+2016-2019 decision-date model selection -> baseline / logistic / XGBoost /
+selected model -> exploratory Precision@K on 2022-2025 -> results/ and charts/.
 
     python run_project.py                  # uses data/ caches
     python run_project.py --rebuild-panel  # rebuild the panel from the raw snapshot

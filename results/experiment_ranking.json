@@ -1,0 +1,73 @@
+{
+  "description": "Exploratory ranking and auxiliary target experiments on two purged historical folds; no later evaluation dates used.",
+  "folds": {
+    "P1: fit 2016-17 -> val 2019": {
+      "fit_rows": 52998,
+      "validation_rows": 22981,
+      "neural_epochs": 40,
+      "precision_at_100": {
+        "neural": 0.5175000000000001,
+        "history_baseline": 0.37250000000000005,
+        "ranker_depth_2": 0.47,
+        "ranker_depth_4": 0.49,
+        "violations_regressor": 0.38750000000000007,
+        "neural_0.75+history_baseline_0.25": 0.51,
+        "neural_0.50+history_baseline_0.50": 0.45249999999999996,
+        "neural_0.25+history_baseline_0.75": 0.445,
+        "neural_0.75+ranker_depth_2_0.25": 0.5275000000000001,
+        "neural_0.50+ranker_depth_2_0.50": 0.5125,
+        "neural_0.25+ranker_depth_2_0.75": 0.49,
+        "neural_0.75+ranker_depth_4_0.25": 0.5075000000000001,
+        "neural_0.50+ranker_depth_4_0.50": 0.5175000000000001,
+        "neural_0.25+ranker_depth_4_0.75": 0.505,
+        "neural_0.75+violations_regressor_0.25": 0.4725,
+        "neural_0.50+violations_regressor_0.50": 0.4825,
+        "neural_0.25+violations_regressor_0.75": 0.46
+      }
+    },
+    "P2: fit 2016 -> val 2018": {
+      "fit_rows": 28937,
+      "validation_rows": 24151,
+      "neural_epochs": 57,
+      "precision_at_100": {
+        "neural": 0.495,
+        "history_baseline": 0.485,
+        "ranker_depth_2": 0.47,
+        "ranker_depth_4": 0.3925,
+        "violations_regressor": 0.4275,
+        "neural_0.75+history_baseline_0.25": 0.49,
+        "neural_0.50+history_baseline_0.50": 0.4925,
+        "neural_0.25+history_baseline_0.75": 0.4975,
+        "neural_0.75+ranker_depth_2_0.25": 0.48,
+        "neural_0.50+ranker_depth_2_0.50": 0.4725,
+        "neural_0.25+ranker_depth_2_0.75": 0.49,
+        "neural_0.75+ranker_depth_4_0.25": 0.4575,
+        "neural_0.50+ranker_depth_4_0.50": 0.4775,
+        "neural_0.25+ranker_depth_4_0.75": 0.455,
+        "neural_0.75+violations_regressor_0.25": 0.4825,
+        "neural_0.50+violations_regressor_0.50": 0.46749999999999997,
+        "neural_0.25+violations_regressor_0.75": 0.45249999999999996
+      }
+    }
+  },
+  "mean_purged_precision_at_100": {
+    "neural": 0.5062500000000001,
+    "history_baseline": 0.42875,
+    "ranker_depth_2": 0.47,
+    "ranker_depth_4": 0.44125000000000003,
+    "violations_regressor": 0.40750000000000003,
+    "neural_0.75+history_baseline_0.25": 0.5,
+    "neural_0.50+history_baseline_0.50": 0.4725,
+    "neural_0.25+history_baseline_0.75": 0.47125,
+    "neural_0.75+ranker_depth_2_0.25": 0.50375,
+    "neural_0.50+ranker_depth_2_0.50": 0.49249999999999994,
+    "neural_0.25+ranker_depth_2_0.75": 0.49,
+    "neural_0.75+ranker_depth_4_0.25": 0.48250000000000004,
+    "neural_0.50+ranker_depth_4_0.50": 0.49750000000000005,
+    "neural_0.25+ranker_depth_4_0.75": 0.48,
+    "neural_0.75+violations_regressor_0.25": 0.4775,
+    "neural_0.50+violations_regressor_0.50": 0.475,
+    "neural_0.25+violations_regressor_0.75": 0.45625
+  },
+  "elapsed_seconds": 48.23499999998603
+}

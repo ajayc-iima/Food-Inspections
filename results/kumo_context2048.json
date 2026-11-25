@@ -1,0 +1,116 @@
+{
+  "status": "complete",
+  "complete": true,
+  "description": "Kumo benchmark on purged training-period folds; no held-out test data used",
+  "panel_sha256": "d133349ebbb31c53f6b62d5842535e9fe9300f7d39e9e86417b6af88f4aae6ae",
+  "python": "3.12.10",
+  "torch": "2.15.0+cpu",
+  "structured_data_models": "0.3.0",
+  "settings": {
+    "size": "small",
+    "device": "cpu",
+    "context_size": 2048,
+    "context_sampling": "uniform without replacement within each purged fit fold",
+    "batch_size": 256,
+    "estimators": 1,
+    "threads": 4,
+    "seed": 42,
+    "fold": "all",
+    "max_batches": null,
+    "k": 100,
+    "features": [
+      "n_canvass_prev",
+      "n_outcome_prev",
+      "n_fail_prev",
+      "hist_fail_rate_smooth",
+      "days_since_last_canvass",
+      "days_since_first_canvass",
+      "days_since_last_fail",
+      "has_failed_before",
+      "n_canvass_24m",
+      "n_fail_24m",
+      "fail_rate_24m",
+      "viol_last",
+      "viol_mean_last3",
+      "viol_mean_24m",
+      "zip_hist_fail_rate",
+      "risk_latest",
+      "fac_Restaurant",
+      "fac_Grocery Store",
+      "fac_Bakery",
+      "fac_Banquet",
+      "fac_Daycare (2 Under 2 Years)",
+      "fac_Daycare Above 2 Years",
+      "fac_School",
+      "fac_Mobile Food Dispenser",
+      "fac_Long Term Care",
+      "fac_Hospital",
+      "fac_Shared Kitchen",
+      "fac_Other"
+    ]
+  },
+  "folds": {
+    "P1: fit 2016-17 -> val 2019": {
+      "status": "complete",
+      "fit_rows": 52998,
+      "context_rows": 2048,
+      "context_index_sha256": "63f8c0eb140ea6a7a96d0f1594d2ffb343d0a9406cae9901b3d641014af7da88",
+      "validation_rows": 22981,
+      "dates": {
+        "2019-03-31": {
+          "rows": 6454,
+          "kumo_precision_at_k": 0.47,
+          "baseline_precision_at_k": 0.41
+        },
+        "2019-06-30": {
+          "rows": 5880,
+          "kumo_precision_at_k": 0.52,
+          "baseline_precision_at_k": 0.37
+        },
+        "2019-09-30": {
+          "rows": 5556,
+          "kumo_precision_at_k": 0.44,
+          "baseline_precision_at_k": 0.36
+        },
+        "2019-12-31": {
+          "rows": 5091,
+          "kumo_precision_at_k": 0.46,
+          "baseline_precision_at_k": 0.35
+        }
+      },
+      "mean_precision_at_k": 0.4725
+    },
+    "P2: fit 2016 -> val 2018": {
+      "status": "complete",
+      "fit_rows": 28937,
+      "context_rows": 2048,
+      "context_index_sha256": "56784009ba92fd3828c7c6eb63426f39fd9fac3f529afba3c796b87a540af7d1",
+      "validation_rows": 24151,
+      "dates": {
+        "2018-03-31": {
+          "rows": 5454,
+          "kumo_precision_at_k": 0.41,
+          "baseline_precision_at_k": 0.54
+        },
+        "2018-06-30": {
+          "rows": 5682,
+          "kumo_precision_at_k": 0.41,
+          "baseline_precision_at_k": 0.5
+        },
+        "2018-09-30": {
+          "rows": 6020,
+          "kumo_precision_at_k": 0.43,
+          "baseline_precision_at_k": 0.45
+        },
+        "2018-12-31": {
+          "rows": 6995,
+          "kumo_precision_at_k": 0.5,
+          "baseline_precision_at_k": 0.45
+        }
+      },
+      "mean_precision_at_k": 0.4375
+    }
+  },
+  "mean_purged_precision_at_k": 0.45499999999999996,
+  "elapsed_seconds": 223.6720000000205
+}

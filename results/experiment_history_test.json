@@ -1,0 +1,98 @@
+{
+  "status": "complete",
+  "evaluation": "exploratory previously examined 2022\u20132025 period",
+  "fit_details": {
+    "original": {
+      "epochs": 28,
+      "max_epochs": 60,
+      "reached_epoch_limit": false
+    },
+    "enhanced_60": {
+      "epochs": 48,
+      "max_epochs": 60,
+      "reached_epoch_limit": false
+    },
+    "enhanced_150": {
+      "epochs": 48,
+      "max_epochs": 150,
+      "reached_epoch_limit": false
+    }
+  },
+  "by_date": {
+    "2022-03-31": {
+      "original": 0.51,
+      "enhanced_60": 0.53,
+      "enhanced_150": 0.53
+    },
+    "2022-06-30": {
+      "original": 0.47,
+      "enhanced_60": 0.5,
+      "enhanced_150": 0.5
+    },
+    "2022-09-30": {
+      "original": 0.44,
+      "enhanced_60": 0.42,
+      "enhanced_150": 0.42
+    },
+    "2022-12-31": {
+      "original": 0.49,
+      "enhanced_60": 0.49,
+      "enhanced_150": 0.49
+    },
+    "2023-03-31": {
+      "original": 0.54,
+      "enhanced_60": 0.55,
+      "enhanced_150": 0.55
+    },
+    "2023-06-30": {
+      "original": 0.58,
+      "enhanced_60": 0.55,
+      "enhanced_150": 0.55
+    },
+    "2023-09-30": {
+      "original": 0.51,
+      "enhanced_60": 0.54,
+      "enhanced_150": 0.54
+    },
+    "2023-12-31": {
+      "original": 0.47,
+      "enhanced_60": 0.47,
+      "enhanced_150": 0.47
+    },
+    "2024-03-31": {
+      "original": 0.48,
+      "enhanced_60": 0.49,
+      "enhanced_150": 0.49
+    },
+    "2024-06-30": {
+      "original": 0.51,
+      "enhanced_60": 0.52,
+      "enhanced_150": 0.52
+    },
+    "2024-09-30": {
+      "original": 0.48,
+      "enhanced_60": 0.49,
+      "enhanced_150": 0.49
+    },
+    "2024-12-31": {
+      "original": 0.45,
+      "enhanced_60": 0.44,
+      "enhanced_150": 0.44
+    },
+    "2025-03-31": {
+      "original": 0.37,
+      "enhanced_60": 0.36,
+      "enhanced_150": 0.36
+    },
+    "2025-06-30": {
+      "original": 0.35,
+      "enhanced_60": 0.34,
+      "enhanced_150": 0.34
+    }
+  },
+  "mean_precision_at_100": {
+    "original": 0.47500000000000003,
+    "enhanced_60": 0.4778571428571429,
+    "enhanced_150": 0.4778571428571429
+  }
+}
