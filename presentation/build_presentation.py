@@ -584,6 +584,45 @@ if loc_path.exists():
              "strictness alone is +1.4 points with an interval touching zero, and the feature set was chosen on "
              "eight validation dates.")
 
+# 12d business impact -----------------------------------------------------------
+de_path = ROOT / "results/days_earlier.json"
+if de_path.exists():
+    DE = json.loads(de_path.read_text())
+    sm = DE["period_2022_2025"]["summary"]
+    fm, hr = sm["final model"], sm["history rule"]
+    cmp_ = DE["period_2022_2025"]["comparisons"]["final model minus actual order (days earlier per failure)"]
+    s = new(dark=True)
+    header(s, "Business impact · same inspectors, same number of visits",
+           f"Re-ordering the city’s real queue catches failures {fm['mean_days_earlier_per_failure']:.0f} days sooner",
+           dark=True)
+    cw3 = (CW - 2 * 0.3) / 3
+    stats = [(f"{fm['mean_days_earlier_per_failure']:.0f} days", "Earlier each failure is caught, vs the city’s actual "
+              f"order (history rule: {hr['mean_days_earlier_per_failure']:.0f} days). Ahead on {cmp_['dates_ahead']} of 14 quarters."),
+             (f"{fm['share_failures_in_first_half'] * 100:.0f}%", "Of failures found in the first half of the quarter’s "
+              f"visits, up from {fm['share_failures_in_first_half_actual'] * 100:.0f}% in the actual order "
+              f"(rule: {hr['share_failures_in_first_half'] * 100:.0f}%)."),
+             (f"{fm['mean_failure_days_saved_per_quarter']:,.0f}", "Days of failing restaurants operating unchecked, "
+              f"removed every quarter: {(fm['mean_failure_days_saved_per_quarter'] / hr['mean_failure_days_saved_per_quarter'] - 1) * 100:.0f}% "
+              "more than the history rule.")]
+    for i, (big, body) in enumerate(stats):
+        x = MX + i * (cw3 + 0.3)
+        r = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x), Inches(2.2), Inches(cw3), Inches(3.3))
+        r.adjustments[0] = 0.06
+        r.fill.solid(); r.fill.fore_color.rgb = RGBColor(0x22, 0x30, 0x50); r.line.fill.background(); r.shadow.inherit = False
+        text(s, x + 0.3, 2.45, cw3 - 0.6, 1.1, big, size=48, bold=True, font=HEAD, color=WHITE)
+        text(s, x + 0.3, 3.6, cw3 - 0.6, 1.8, body, size=16, color=LIGHT_ON_DARK)
+    text(s, MX, 5.8, CW, 0.7, f"About {fm['mean_inspections_per_quarter']:,.0f} actual routine inspections per quarter, "
+         f"{fm['mean_failures_per_quarter']:.0f} of them failures, 2022–25. Chicago’s own 2014 pilot: 7.4 days, 55% → 69%.",
+         size=15, color=LIGHT_ON_DARK)
+    footer(s, "Assumes a result does not depend on when in the quarter a place is visited; travel ignored. "
+              "Source: days_earlier.py → results/days_earlier.json.", dark=True)
+    notes(s, "This is the business translation. Take the inspections the city really did in each quarter, keep the "
+             "same visit days, and do them in the model’s order. Failures are caught about 10 days sooner on average, "
+             "on every one of the 14 quarters; the history rule alone manages about 6. That removes roughly 4,300 days "
+             "per quarter in which a failing restaurant keeps serving customers before it is caught, with no extra "
+             "inspectors. Chicago’s own pilot reported 7.4 days over two months. Caveats: we assume the result does "
+             "not depend on visit timing, and we ignore travel.")
+
 # 13 next ---------------------------------------------------------------------
 s = new(alt=True)
 header(s, "What we tried, and what comes next", "Beyond accuracy: rank by harm averted per inspector-hour")
@@ -613,11 +652,10 @@ text(s, MX, 1.75, CW, 1.2, "Past failures get you most of the way; recent violat
      bold=True, font=HEAD, color=WHITE)
 pts = [f"The history rule finds {pct(P100['baseline'], 0)} failures in the top 100, against "
        f"{pct(TP['mean_base_rate'], 0)} at random.",
-       f"Logistic regression adds {diff * 100:.1f} points (95% interval +{lo * 100:.1f} to +{hi * 100:.1f}) and "
-       "more violations on every quarter; the validation-selected neural net does the same.",
        "The lists differ because the model looks at how bad recent visits were, not just how often a place failed.",
        "The aha: how often inspections nearby failed recently matters almost as much as a place’s own record. "
-       "With it and complaint history the model reaches 50.6%, about 15% more failures than the rule."]
+       "With it and complaint history the model reaches 50.6%, about 15% more failures than the rule.",
+       "Re-ordering the city’s real queue this way catches failures about 10 days sooner, with the same inspectors."]
 tb = text(s, MX, 3.15, CW, 2.8, pts, size=19, color=RGBColor(0xE9, 0xED, 0xF4))
 for p in tb.text_frame.paragraphs:
     pPr = p._p.get_or_add_pPr()

@@ -1,0 +1,474 @@
+{
+  "horizon_days": 90,
+  "design": "Same design as Chicago's 2014 pilot (CDPH/DoIT): for each decision date T, take the routine inspections the city actually carried out in the next 90 days, keep the same set of inspection days (the same capacity), and hand those days out in the order each approach ranks the establishments. A failure found on day 60 in reality but placed on day 20 is caught 40 days earlier.",
+  "period_2022_2025": {
+    "summary": {
+      "history rule": {
+        "mean_days_earlier_per_failure": 6.109145774198494,
+        "mean_failure_days_saved_per_quarter": 2615.714285714286,
+        "share_failures_in_first_half": 0.6038309868583719,
+        "share_failures_in_first_half_actual": 0.5177438042222794,
+        "mean_inspections_per_quarter": 1714.0714285714287,
+        "mean_failures_per_quarter": 425.57142857142856
+      },
+      "logistic": {
+        "mean_days_earlier_per_failure": 8.980157399416177,
+        "mean_failure_days_saved_per_quarter": 3838.5,
+        "share_failures_in_first_half": 0.6518619031172994,
+        "share_failures_in_first_half_actual": 0.5177438042222794,
+        "mean_inspections_per_quarter": 1714.0714285714287,
+        "mean_failures_per_quarter": 425.57142857142856
+      },
+      "final model": {
+        "mean_days_earlier_per_failure": 10.119547844834985,
+        "mean_failure_days_saved_per_quarter": 4321.071428571428,
+        "share_failures_in_first_half": 0.6724919716162726,
+        "share_failures_in_first_half_actual": 0.5177438042222794,
+        "mean_inspections_per_quarter": 1714.0714285714287,
+        "mean_failures_per_quarter": 425.57142857142856
+      }
+    },
+    "per_date": {
+      "history rule": {
+        "2022-03-31": {
+          "days_earlier_per_failure": 7.065060240963855,
+          "failure_days_saved": 2932.0,
+          "share_failures_in_first_half": 0.5879518072289157,
+          "share_failures_in_first_half_actual": 0.4795180722891566,
+          "inspections": 1548,
+          "failures": 415
+        },
+        "2022-06-30": {
+          "days_earlier_per_failure": 5.922727272727273,
+          "failure_days_saved": 2606.0,
+          "share_failures_in_first_half": 0.6,
+          "share_failures_in_first_half_actual": 0.4954545454545455,
+          "inspections": 1457,
+          "failures": 440
+        },
+        "2022-09-30": {
+          "days_earlier_per_failure": 4.4914004914004915,
+          "failure_days_saved": 1828.0,
+          "share_failures_in_first_half": 0.5945945945945946,
+          "share_failures_in_first_half_actual": 0.538083538083538,
+          "inspections": 1470,
+          "failures": 407
+        },
+        "2022-12-31": {
+          "days_earlier_per_failure": 7.625310173697271,
+          "failure_days_saved": 3073.0,
+          "share_failures_in_first_half": 0.5831265508684863,
+          "share_failures_in_first_half_actual": 0.5086848635235732,
+          "inspections": 1593,
+          "failures": 403
+        },
+        "2023-03-31": {
+          "days_earlier_per_failure": 6.302439024390244,
+          "failure_days_saved": 2584.0,
+          "share_failures_in_first_half": 0.6048780487804878,
+          "share_failures_in_first_half_actual": 0.5,
+          "inspections": 1508,
+          "failures": 410
+        },
+        "2023-06-30": {
+          "days_earlier_per_failure": 7.205417607223477,
+          "failure_days_saved": 3192.0,
+          "share_failures_in_first_half": 0.5959367945823928,
+          "share_failures_in_first_half_actual": 0.5124153498871332,
+          "inspections": 1452,
+          "failures": 443
+        },
+        "2023-09-30": {
+          "days_earlier_per_failure": 1.6383928571428572,
+          "failure_days_saved": 734.0,
+          "share_failures_in_first_half": 0.5691964285714286,
+          "share_failures_in_first_half_actual": 0.5602678571428571,
+          "inspections": 1735,
+          "failures": 448
+        },
+        "2023-12-31": {
+          "days_earlier_per_failure": 5.866525423728813,
+          "failure_days_saved": 2769.0,
+          "share_failures_in_first_half": 0.614406779661017,
+          "share_failures_in_first_half_actual": 0.5233050847457628,
+          "inspections": 1732,
+          "failures": 472
+        },
+        "2024-03-31": {
+          "days_earlier_per_failure": 8.302631578947368,
+          "failure_days_saved": 3786.0,
+          "share_failures_in_first_half": 0.6271929824561403,
+          "share_failures_in_first_half_actual": 0.5131578947368421,
+          "inspections": 1967,
+          "failures": 456
+        },
+        "2024-06-30": {
+          "days_earlier_per_failure": 7.157384987893463,
+          "failure_days_saved": 2956.0,
+          "share_failures_in_first_half": 0.6295399515738499,
+          "share_failures_in_first_half_actual": 0.5036319612590799,
+          "inspections": 1888,
+          "failures": 413
+        },
+        "2024-09-30": {
+          "days_earlier_per_failure": 3.098404255319149,
+          "failure_days_saved": 1165.0,
+          "share_failures_in_first_half": 0.574468085106383,
+          "share_failures_in_first_half_actual": 0.5638297872340425,
+          "inspections": 1842,
+          "failures": 376
+        },
+        "2024-12-31": {
+          "days_earlier_per_failure": 7.256410256410256,
+          "failure_days_saved": 3396.0,
+          "share_failures_in_first_half": 0.6388888888888888,
+          "share_failures_in_first_half_actual": 0.5256410256410257,
+          "inspections": 2188,
+          "failures": 468
+        },
+        "2025-03-31": {
+          "days_earlier_per_failure": 8.48512585812357,
+          "failure_days_saved": 3708.0,
+          "share_failures_in_first_half": 0.6361556064073226,
+          "share_failures_in_first_half_actual": 0.4919908466819222,
+          "inspections": 2052,
+          "failures": 437
+        },
+        "2025-06-30": {
+          "days_earlier_per_failure": 5.110810810810811,
+          "failure_days_saved": 1891.0,
+          "share_failures_in_first_half": 0.5972972972972973,
+          "share_failures_in_first_half_actual": 0.5324324324324324,
+          "inspections": 1565,
+          "failures": 370
+        }
+      },
+      "logistic": {
+        "2022-03-31": {
+          "days_earlier_per_failure": 9.332530120481927,
+          "failure_days_saved": 3873.0,
+          "share_failures_in_first_half": 0.6337349397590362,
+          "share_failures_in_first_half_actual": 0.4795180722891566,
+          "inspections": 1548,
+          "failures": 415
+        },
+        "2022-06-30": {
+          "days_earlier_per_failure": 9.193181818181818,
+          "failure_days_saved": 4045.0,
+          "share_failures_in_first_half": 0.6431818181818182,
+          "share_failures_in_first_half_actual": 0.4954545454545455,
+          "inspections": 1457,
+          "failures": 440
+        },
+        "2022-09-30": {
+          "days_earlier_per_failure": 7.461916461916462,
+          "failure_days_saved": 3037.0,
+          "share_failures_in_first_half": 0.6265356265356266,
+          "share_failures_in_first_half_actual": 0.538083538083538,
+          "inspections": 1470,
+          "failures": 407
+        },
+        "2022-12-31": {
+          "days_earlier_per_failure": 9.632754342431761,
+          "failure_days_saved": 3882.0,
+          "share_failures_in_first_half": 0.6327543424317618,
+          "share_failures_in_first_half_actual": 0.5086848635235732,
+          "inspections": 1593,
+          "failures": 403
+        },
+        "2023-03-31": {
+          "days_earlier_per_failure": 8.96829268292683,
+          "failure_days_saved": 3677.0,
+          "share_failures_in_first_half": 0.6439024390243903,
+          "share_failures_in_first_half_actual": 0.5,
+          "inspections": 1508,
+          "failures": 410
+        },
+        "2023-06-30": {
+          "days_earlier_per_failure": 9.10609480812641,
+          "failure_days_saved": 4034.0,
+          "share_failures_in_first_half": 0.6320541760722348,
+          "share_failures_in_first_half_actual": 0.5124153498871332,
+          "inspections": 1452,
+          "failures": 443
+        },
+        "2023-09-30": {
+          "days_earlier_per_failure": 3.107142857142857,
+          "failure_days_saved": 1392.0,
+          "share_failures_in_first_half": 0.5892857142857143,
+          "share_failures_in_first_half_actual": 0.5602678571428571,
+          "inspections": 1735,
+          "failures": 448
+        },
+        "2023-12-31": {
+          "days_earlier_per_failure": 9.10593220338983,
+          "failure_days_saved": 4298.0,
+          "share_failures_in_first_half": 0.663135593220339,
+          "share_failures_in_first_half_actual": 0.5233050847457628,
+          "inspections": 1732,
+          "failures": 472
+        },
+        "2024-03-31": {
+          "days_earlier_per_failure": 11.116228070175438,
+          "failure_days_saved": 5069.0,
+          "share_failures_in_first_half": 0.6929824561403509,
+          "share_failures_in_first_half_actual": 0.5131578947368421,
+          "inspections": 1967,
+          "failures": 456
+        },
+        "2024-06-30": {
+          "days_earlier_per_failure": 11.193704600484262,
+          "failure_days_saved": 4623.0,
+          "share_failures_in_first_half": 0.6876513317191283,
+          "share_failures_in_first_half_actual": 0.5036319612590799,
+          "inspections": 1888,
+          "failures": 413
+        },
+        "2024-09-30": {
+          "days_earlier_per_failure": 7.888297872340425,
+          "failure_days_saved": 2966.0,
+          "share_failures_in_first_half": 0.6675531914893617,
+          "share_failures_in_first_half_actual": 0.5638297872340425,
+          "inspections": 1842,
+          "failures": 376
+        },
+        "2024-12-31": {
+          "days_earlier_per_failure": 11.9508547008547,
+          "failure_days_saved": 5593.0,
+          "share_failures_in_first_half": 0.7072649572649573,
+          "share_failures_in_first_half_actual": 0.5256410256410257,
+          "inspections": 2188,
+          "failures": 468
+        },
+        "2025-03-31": {
+          "days_earlier_per_failure": 10.654462242562929,
+          "failure_days_saved": 4656.0,
+          "share_failures_in_first_half": 0.6681922196796338,
+          "share_failures_in_first_half_actual": 0.4919908466819222,
+          "inspections": 2052,
+          "failures": 437
+        },
+        "2025-06-30": {
+          "days_earlier_per_failure": 7.010810810810811,
+          "failure_days_saved": 2594.0,
+          "share_failures_in_first_half": 0.6378378378378379,
+          "share_failures_in_first_half_actual": 0.5324324324324324,
+          "inspections": 1565,
+          "failures": 370
+        }
+      },
+      "final model": {
+        "2022-03-31": {
+          "days_earlier_per_failure": 11.819277108433734,
+          "failure_days_saved": 4905.0,
+          "share_failures_in_first_half": 0.6626506024096386,
+          "share_failures_in_first_half_actual": 0.4795180722891566,
+          "inspections": 1548,
+          "failures": 415
+        },
+        "2022-06-30": {
+          "days_earlier_per_failure": 10.981818181818182,
+          "failure_days_saved": 4832.0,
+          "share_failures_in_first_half": 0.6818181818181818,
+          "share_failures_in_first_half_actual": 0.4954545454545455,
+          "inspections": 1457,
+          "failures": 440
+        },
+        "2022-09-30": {
+          "days_earlier_per_failure": 9.162162162162161,
+          "failure_days_saved": 3729.0,
+          "share_failures_in_first_half": 0.6732186732186732,
+          "share_failures_in_first_half_actual": 0.538083538083538,
+          "inspections": 1470,
+          "failures": 407
+        },
+        "2022-12-31": {
+          "days_earlier_per_failure": 9.121588089330025,
+          "failure_days_saved": 3676.0,
+          "share_failures_in_first_half": 0.6228287841191067,
+          "share_failures_in_first_half_actual": 0.5086848635235732,
+          "inspections": 1593,
+          "failures": 403
+        },
+        "2023-03-31": {
+          "days_earlier_per_failure": 10.970731707317073,
+          "failure_days_saved": 4498.0,
+          "share_failures_in_first_half": 0.675609756097561,
+          "share_failures_in_first_half_actual": 0.5,
+          "inspections": 1508,
+          "failures": 410
+        },
+        "2023-06-30": {
+          "days_earlier_per_failure": 11.422121896162528,
+          "failure_days_saved": 5060.0,
+          "share_failures_in_first_half": 0.6817155756207675,
+          "share_failures_in_first_half_actual": 0.5124153498871332,
+          "inspections": 1452,
+          "failures": 443
+        },
+        "2023-09-30": {
+          "days_earlier_per_failure": 4.799107142857143,
+          "failure_days_saved": 2150.0,
+          "share_failures_in_first_half": 0.6294642857142857,
+          "share_failures_in_first_half_actual": 0.5602678571428571,
+          "inspections": 1735,
+          "failures": 448
+        },
+        "2023-12-31": {
+          "days_earlier_per_failure": 9.470338983050848,
+          "failure_days_saved": 4470.0,
+          "share_failures_in_first_half": 0.6673728813559322,
+          "share_failures_in_first_half_actual": 0.5233050847457628,
+          "inspections": 1732,
+          "failures": 472
+        },
+        "2024-03-31": {
+          "days_earlier_per_failure": 12.736842105263158,
+          "failure_days_saved": 5808.0,
+          "share_failures_in_first_half": 0.7149122807017544,
+          "share_failures_in_first_half_actual": 0.5131578947368421,
+          "inspections": 1967,
+          "failures": 456
+        },
+        "2024-06-30": {
+          "days_earlier_per_failure": 11.973365617433414,
+          "failure_days_saved": 4945.0,
+          "share_failures_in_first_half": 0.6900726392251816,
+          "share_failures_in_first_half_actual": 0.5036319612590799,
+          "inspections": 1888,
+          "failures": 413
+        },
+        "2024-09-30": {
+          "days_earlier_per_failure": 9.058510638297872,
+          "failure_days_saved": 3406.0,
+          "share_failures_in_first_half": 0.6888297872340425,
+          "share_failures_in_first_half_actual": 0.5638297872340425,
+          "inspections": 1842,
+          "failures": 376
+        },
+        "2024-12-31": {
+          "days_earlier_per_failure": 11.82905982905983,
+          "failure_days_saved": 5536.0,
+          "share_failures_in_first_half": 0.7072649572649573,
+          "share_failures_in_first_half_actual": 0.5256410256410257,
+          "inspections": 2188,
+          "failures": 468
+        },
+        "2025-03-31": {
+          "days_earlier_per_failure": 10.423340961098399,
+          "failure_days_saved": 4555.0,
+          "share_failures_in_first_half": 0.6704805491990846,
+          "share_failures_in_first_half_actual": 0.4919908466819222,
+          "inspections": 2052,
+          "failures": 437
+        },
+        "2025-06-30": {
+          "days_earlier_per_failure": 7.905405405405405,
+          "failure_days_saved": 2925.0,
+          "share_failures_in_first_half": 0.6486486486486487,
+          "share_failures_in_first_half_actual": 0.5324324324324324,
+          "inspections": 1565,
+          "failures": 370
+        }
+      }
+    },
+    "comparisons": {
+      "final model minus history rule (days earlier per failure)": {
+        "mean": 4.0104020706364905,
+        "ci95": [
+          3.6526229594968376,
+          4.587238140564663
+        ],
+        "dates_ahead": 14,
+        "dates_behind": 0
+      },
+      "final model minus logistic (days earlier per failure)": {
+        "mean": 1.139390445418808,
+        "ci95": [
+          0.7015521092738963,
+          1.5098514945807664
+        ],
+        "dates_ahead": 11,
+        "dates_behind": 3
+      },
+      "history rule minus actual order (days earlier per failure)": {
+        "mean": 6.109145774198494,
+        "ci95": [
+          5.514173846508787,
+          6.445898104660672
+        ],
+        "dates_ahead": 14,
+        "dates_behind": 0
+      },
+      "final model minus actual order (days earlier per failure)": {
+        "mean": 10.119547844834985,
+        "ci95": [
+          9.31970826074343,
+          10.868254965778071
+        ],
+        "dates_ahead": 14,
+        "dates_behind": 0
+      }
+    }
+  },
+  "date_2025_09_30": {
+    "summary": {
+      "history rule": {
+        "mean_days_earlier_per_failure": 4.159744408945687,
+        "mean_failure_days_saved_per_quarter": 1302.0,
+        "share_failures_in_first_half": 0.6038338658146964,
+        "share_failures_in_first_half_actual": 0.5527156549520766,
+        "mean_inspections_per_quarter": 1511.0,
+        "mean_failures_per_quarter": 313.0
+      },
+      "logistic": {
+        "mean_days_earlier_per_failure": 4.2907348242811505,
+        "mean_failure_days_saved_per_quarter": 1343.0,
+        "share_failures_in_first_half": 0.6293929712460063,
+        "share_failures_in_first_half_actual": 0.5527156549520766,
+        "mean_inspections_per_quarter": 1511.0,
+        "mean_failures_per_quarter": 313.0
+      },
+      "final model": {
+        "mean_days_earlier_per_failure": 7.546325878594249,
+        "mean_failure_days_saved_per_quarter": 2362.0,
+        "share_failures_in_first_half": 0.670926517571885,
+        "share_failures_in_first_half_actual": 0.5527156549520766,
+        "mean_inspections_per_quarter": 1511.0,
+        "mean_failures_per_quarter": 313.0
+      }
+    },
+    "per_date": {
+      "history rule": {
+        "2025-09-30": {
+          "days_earlier_per_failure": 4.159744408945687,
+          "failure_days_saved": 1302.0,
+          "share_failures_in_first_half": 0.6038338658146964,
+          "share_failures_in_first_half_actual": 0.5527156549520766,
+          "inspections": 1511,
+          "failures": 313
+        }
+      },
+      "logistic": {
+        "2025-09-30": {
+          "days_earlier_per_failure": 4.2907348242811505,
+          "failure_days_saved": 1343.0,
+          "share_failures_in_first_half": 0.6293929712460063,
+          "share_failures_in_first_half_actual": 0.5527156549520766,
+          "inspections": 1511,
+          "failures": 313
+        }
+      },
+      "final model": {
+        "2025-09-30": {
+          "days_earlier_per_failure": 7.546325878594249,
+          "failure_days_saved": 2362.0,
+          "share_failures_in_first_half": 0.670926517571885,
+          "share_failures_in_first_half_actual": 0.5527156549520766,
+          "inspections": 1511,
+          "failures": 313
+        }
+      }
+    }
+  }
+}

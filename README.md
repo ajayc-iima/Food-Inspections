@@ -275,6 +275,27 @@ On the newest quarter, where plain logistic had slipped below the rule, the full
 +1.4 with an interval that touches zero (−0.1 to +2.0); 2025-09-30 had been scored once before for the
 complaint features; and the feature set was chosen on eight validation dates.
 
+### Business impact: failures caught days earlier with the same inspectors
+
+`python days_earlier.py` → `results/days_earlier.json`. Same design as Chicago's 2014 pilot: at each
+decision date, take the routine inspections the city actually carried out in the next 90 days (about
+1,700 per quarter, 426 of them failures), keep the same inspection days, and hand them out in each
+approach's order. Nothing is added: same inspectors, same number of visits.
+
+| 2022–2025, mean of 14 quarters | Actual order | History rule | Logistic (B) | **Final model** |
+|---|---|---|---|---|
+| Days earlier each failure is caught | 0 | 6.1 | 9.0 | **10.1** [9.3, 10.9] |
+| Failures found in the first half of the quarter's visits | 52% | 60% | 65% | **67%** |
+| Days that failing places operate before being caught, removed per quarter | — | 2,616 | 3,839 | **4,321** |
+
+The final model catches failures **10 days sooner** than the city's actual order, on all 14 quarters,
+and 4.0 days sooner than the history rule (95% interval +3.7 to +4.6, ahead on all 14). That removes
+about **4,300 days of failing restaurants operating unchecked every quarter**, 65% more than the rule,
+with no extra inspections. On the untouched 2025-09-30 date: 7.5 days earlier, against 4.2 for the
+rule. For comparison, Chicago's own pilot reported 7.4 days over a two-month window, with critical
+violations found in the first half rising from 55% to 69%. Assumptions: an establishment's result does
+not depend on when in the quarter it is visited, and travel and routing are ignored.
+
 ## 8. What this establishes — and what it cannot
 
 **Established.** On data the decision-maker could have known at each decision date, ranking by
@@ -283,7 +304,9 @@ inspections as random selection, and the transparent model beats the natural sim
 K = 100 (+3.3 points, 95% interval +1.6 to +5.1; ahead on 11 of 14 dates over three post-pandemic
 years), with more cited violations found on every date. Adding complaint and re-inspection history and the
 recent local failure rate, each confirmed under a pre-registered plan, lifts it to **50.6%**: +6.5
-points over the baseline (95% interval +4.2 to +9.1), about 15% more failures found (§7). It is a claim about **re-ordering the
+points over the baseline (95% interval +4.2 to +9.1), about 15% more failures found. Re-ordering the
+city's actual quarterly inspections with it would catch failures about 10 days sooner, removing about
+4,300 days of failing restaurants operating unchecked per quarter with the same inspectors (§7). It is a claim about **re-ordering the
 routine queue** the city actually ran.
 
 **Where the approach is fine, and where it may look fine but not be useful.** It is fine for deciding
@@ -367,6 +390,7 @@ PyArrow. Model weights download on first use (`HF_HOME` sets the cache).
 | `results/shortlist_latest.csv`, `results/shortlists_all_test_dates.csv.gz` | Top-100 shortlists |
 | `results/experiment_*.json`, `results/rolling_experiment.json`, `results/kumo_*.json` | Experiment outputs |
 | `results/confirm_nonroutine.json`, `results/confirm_local.json`, `results/experiment_local_validation.json` | Pre-registered confirmation results |
+| `days_earlier.py` → `results/days_earlier.json` | Business impact: days earlier failures are caught when the actual queue is re-ordered |
 | `charts/fig1..fig8.png` | Figures for the presentation |
 | `presentation/food_inspections_presentation.pptx` | The 14-slide presentation with speaker notes; rebuild from current results with `python presentation/build_presentation.py . presentation/food_inspections_presentation.pptx` (needs `python-pptx`) |
 
