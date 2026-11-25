@@ -112,7 +112,7 @@ def card(slide, x, y, w, h, label, body, big=None, fill=WHITE, border=LINE, big_
         text(slide, x + 0.25, yy, w - 0.5, h - (yy - y) - 0.2, body, size=body_size)
 
 
-def table(slide, x, y, w, rows, col_w, size=13, highlight=None, row_h=0.42):
+def table(slide, x, y, w, rows, col_w, size=13, highlight=None, row_h=0.42, left_cols=(0,)):
     nr, nc = len(rows), len(rows[0])
     gt = slide.shapes.add_table(nr, nc, Inches(x), Inches(y), Inches(w), Inches(row_h * nr))
     tbl = gt.table
@@ -130,7 +130,7 @@ def table(slide, x, y, w, rows, col_w, size=13, highlight=None, row_h=0.42):
             tf = c.text_frame
             tf.word_wrap = True
             p = tf.paragraphs[0]
-            p.alignment = PP_ALIGN.LEFT if j == 0 else PP_ALIGN.CENTER
+            p.alignment = PP_ALIGN.LEFT if j in left_cols else PP_ALIGN.CENTER
             r = p.add_run()
             r.text = str(val)
             r.font.size = Pt(size)
@@ -622,6 +622,54 @@ if de_path.exists():
              "per quarter in which a failing restaurant keeps serving customers before it is caught, with no extra "
              "inspectors. Chicago’s own pilot reported 7.4 days over two months. Caveats: we assume the result does "
              "not depend on visit timing, and we ignore travel.")
+
+# 12e adoption: what an inspector sees, and why it is safe to try -------------------
+ap_path, sl_path = ROOT / "results/adoption_pack.json", ROOT / "results/shortlist_2026_q4.csv"
+if ap_path.exists() and sl_path.exists():
+    AP = json.loads(ap_path.read_text())
+    SL = pd.read_csv(sl_path, dtype={"zip": str})
+    s = new()
+    header(s, "Ready to use · next quarter’s list",
+           "Every place on the list comes with the reasons an inspector can check")
+    rows = [["#", "Facility · ZIP", "Why it is on the list (from the department’s own records)"]]
+    for _, r in SL.head(5).iterrows():
+        why = " · ".join(str(x) for x in [r["reason_1"], r["reason_2"], r["reason_3"]] if isinstance(x, str) and x)
+        rows.append([str(r["rank"]), f"{r['facility_grouped']} · {r['zip']}", why])
+    table(s, MX, 2.0, CW, rows, [0.05, 0.18, 0.77], size=13, row_h=0.62, left_cols=(0, 1, 2))
+    text(s, MX, 5.95, CW, 0.6, f"Scored: all {AP['live_candidates']:,} establishments with a routine inspection in the last "
+         f"two years, as of {AP['live_date']}. The top 100 span {AP['live_top100_distinct_zips']} ZIP codes. "
+         "Names are in results/shortlist_2026_q4.csv.", size=15)
+    footer(s, "Reasons are the three facts that raised each place’s score most; a fact is shown only when it is above typical.")
+    notes(s, "This is what an inspector or supervisor would receive: a ranked list where each place has three "
+             "plain-language reasons drawn from the department’s own inspection records, for example 25 violations "
+             "at the last inspection when 3 is typical. Anyone can check the reasons against the file. We hide names "
+             "on the slide; they are in the CSV.")
+
+    F = AP["fairness_2022_2025_mean_per_date"]
+    s = new(alt=True)
+    header(s, "Safe to adopt", "A fairness guardrail that costs nothing, and a one-quarter pilot to prove it")
+    def frow(lab, k):
+        v = F[k]
+        return [lab, pct(v["precision_at_100"]), f"{v['distinct_zips']:.0f}", f"{v['max_from_one_zip']:.0f}",
+                pct(v["share_from_strictest_fifth_of_areas"], 0)]
+    rows = [["2022–25, mean per quarter", "Precision@100", "ZIP codes", "Most from one ZIP", "From strictest fifth of areas"],
+            frow("History rule", "history rule"), frow("Final model", "final model"),
+            frow("Final model, max 5 per ZIP", "final model, ZIP cap")]
+    table(s, MX, 2.0, CW, rows, [0.30, 0.16, 0.14, 0.18, 0.22], size=15, highlight={(3, 1), (3, 2), (3, 3)}, row_h=0.52)
+    cw4 = (CW - 3 * 0.3) / 4
+    for i, (lab, body) in enumerate([
+            ("Only the order changes", "Every place still gets the inspection its risk category requires."),
+            ("Uses data you have", "Your own published inspection records; one command, a few minutes."),
+            ("Pilot one quarter", "Half the territories at random use the list; compare failures per 100 visits."),
+            ("Keep it honest", "10% random visits, a quarterly re-check, no inspector-level inputs.")]):
+        card(s, MX + i * (cw4 + 0.3), 4.35, cw4, 2.0, lab, body, body_size=14)
+    footer(s, "The cap was fixed before testing; its gain is on dates already examined. Untouched 2025 Q3: capped model 48%, rule 38%.")
+    notes(s, "The obvious objection to the local-strictness feature is that it could pile visits into a few areas. "
+             "Uncapped, it does: up to 18 of 100 from one ZIP code. A simple cap of 5 per ZIP spreads the list "
+             "across more ZIP codes than the rule and does not lower the hit rate; it raises it to 52%. Then the "
+             "adoption case: nothing changes except the order, it runs on data the department already publishes, "
+             "and a one-quarter randomised pilot answers what our retrospective study cannot. Stop if the model's "
+             "half does no better.")
 
 # 13 next ---------------------------------------------------------------------
 s = new(alt=True)

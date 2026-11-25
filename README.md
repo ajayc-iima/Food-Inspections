@@ -296,6 +296,47 @@ rule. For comparison, Chicago's own pilot reported 7.4 days over a two-month win
 violations found in the first half rising from 55% to 69%. Assumptions: an establishment's result does
 not depend on when in the quarter it is visited, and travel and routing are ignored.
 
+### Adoption: what the department would get, and why it is safe to try
+
+`python adoption_pack.py` → `results/shortlist_2026_q4.csv`, `results/adoption_pack.json`.
+
+**1. A list inspectors can check, not a black box.** The final model scores every establishment with a
+routine inspection in the last two years that is not recorded as out of business (9,088 as of
+2026-09-30), and every one of the top 100 comes with the three facts that put it there, taken from the
+department's own records. Examples from the live list (names are in the CSV):
+
+| # | Facility, ZIP | Why it is on the list |
+|---|---|---|
+| 1 | Grocery store, 60625 | 25 violations at its last routine inspection (typical: 3) · failed its only past routine inspection |
+| 2 | Restaurant, 60613 | 28 violations last time, 17 on average over its last 3 · failed 7 complaint or re-inspection visits · failed 5 of 9 routine inspections |
+| 4 | Restaurant, 60647 | 23 violations at each of its last 3 inspections · 440 days since its last routine inspection · risk category 1 |
+
+**2. A guardrail that costs nothing.** Left alone, the model sends more visits to a few areas than the
+rule does (on average 17.6 of 100 from one ZIP; 47% from the fifth of areas with the highest recent
+local failure rate). A simple cap fixed before testing, **at most 5 of the 100 per ZIP code**, spreads
+the list and does not lower its hit rate; it raises it:
+
+| 2022–2025, mean per date | Precision@100 | Distinct ZIPs | Most from one ZIP | From the strictest fifth of areas |
+|---|---|---|---|---|
+| History rule | 44.1% | 32.9 | 11.8 | 29% |
+| Final model | 50.6% | 29.9 | 17.6 | 47% |
+| **Final model with ZIP cap** | **52.2%** | **35.4** | **5** | **36.5%** |
+
+On the untouched 2025-09-30 date the capped model also scores 48% (the rule: 38%). The cap was chosen
+in advance but checked on dates already examined, so treat its gain as exploratory; its point is that
+fairness does not have to cost accuracy.
+
+**3. Nothing else changes.** Every establishment still gets the inspection its risk category requires;
+the model only changes the **order**. It uses only data the department already publishes, runs in a
+few minutes with one command, and has no inspector-level inputs.
+
+**4. A low-risk way to find out.** A one-quarter pilot: split inspection territories at random; half
+work in the model's order, half as usual. Compare failures found per 100 visits and days to detection.
+No extra staff; stop at the end of the quarter if the model's half does no better. A randomised pilot
+also answers what this retrospective study cannot: what happens at places the city would not otherwise
+have visited first. Keep about 10% of slots for random visits so the model keeps learning about places
+it would not pick, and re-check it every quarter on the purged validation used here.
+
 ## 8. What this establishes — and what it cannot
 
 **Established.** On data the decision-maker could have known at each decision date, ranking by
@@ -391,6 +432,8 @@ PyArrow. Model weights download on first use (`HF_HOME` sets the cache).
 | `results/experiment_*.json`, `results/rolling_experiment.json`, `results/kumo_*.json` | Experiment outputs |
 | `results/confirm_nonroutine.json`, `results/confirm_local.json`, `results/experiment_local_validation.json` | Pre-registered confirmation results |
 | `days_earlier.py` → `results/days_earlier.json` | Business impact: days earlier failures are caught when the actual queue is re-ordered |
+| `adoption_pack.py` → `results/shortlist_2026_q4.csv`, `results/adoption_pack.json` | Live shortlist with reasons, fairness check and ZIP-cap guardrail |
+| `data/raw_other_inspections_through_2026_09_30.csv.gz` | Non-routine inspections for the live shortlist |
 | `charts/fig1..fig8.png` | Figures for the presentation |
 | `presentation/food_inspections_presentation.pptx` | The 14-slide presentation with speaker notes; rebuild from current results with `python presentation/build_presentation.py . presentation/food_inspections_presentation.pptx` (needs `python-pptx`) |
 

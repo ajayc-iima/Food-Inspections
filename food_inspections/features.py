@@ -12,7 +12,7 @@ from . import config as C
 PANEL_FEATURE_VERSION = 2
 
 
-def features_at_date(df: pd.DataFrame, T: pd.Timestamp) -> pd.DataFrame:
+def features_at_date(df: pd.DataFrame, T: pd.Timestamp, require_label: bool = True) -> pd.DataFrame:
     hist = df[df["date"] <= T]
     fut = df[(df["date"] > T) & (df["date"] <= T + pd.Timedelta(days=C.LABEL_WINDOW_DAYS))
              & df["is_outcome"]]
@@ -84,7 +84,10 @@ def features_at_date(df: pd.DataFrame, T: pd.Timestamp) -> pd.DataFrame:
     out["global_rate_at_T"] = global_rate
 
     # candidates: establishments with history whose next routine outcome is observed
-    return out[(out["n_canvass_prev"] >= 1) & out["label"].notna()].reset_index()
+    keep = out["n_canvass_prev"] >= 1
+    if require_label:  # evaluation: only establishments whose next routine outcome is observed
+        keep &= out["label"].notna()
+    return out[keep].reset_index()
 
 
 def build_panel(df: pd.DataFrame) -> pd.DataFrame:

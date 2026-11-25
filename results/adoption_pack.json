@@ -1,0 +1,120 @@
+{
+  "live_date": "2026-09-30",
+  "live_candidates": 9088,
+  "live_note": "Live list scores every establishment with a routine inspection in the last 2 years that is not out of business; it has no outcome yet.",
+  "live_top100_facility_mix": {
+    "Restaurant": 79,
+    "Grocery Store": 14,
+    "Bakery": 4,
+    "Long Term Care": 2,
+    "School": 1
+  },
+  "live_top100_distinct_zips": 35,
+  "fairness_2022_2025_mean_per_date": {
+    "history rule": {
+      "precision_at_100": 0.4407,
+      "distinct_zips": 32.9286,
+      "top5_zip_share": 0.3729,
+      "max_from_one_zip": 11.7857,
+      "share_from_strictest_fifth_of_areas": 0.2929,
+      "share_from_most_lenient_fifth": 0.1336
+    },
+    "final model": {
+      "precision_at_100": 0.5057,
+      "distinct_zips": 29.9286,
+      "top5_zip_share": 0.4829,
+      "max_from_one_zip": 17.6429,
+      "share_from_strictest_fifth_of_areas": 0.4721,
+      "share_from_most_lenient_fifth": 0.0636
+    },
+    "history rule, ZIP cap": {
+      "precision_at_100": 0.4464,
+      "distinct_zips": 36.2857,
+      "top5_zip_share": 0.25,
+      "max_from_one_zip": 5.0,
+      "share_from_strictest_fifth_of_areas": 0.2929,
+      "share_from_most_lenient_fifth": 0.1379
+    },
+    "final model, ZIP cap": {
+      "precision_at_100": 0.5221,
+      "distinct_zips": 35.4286,
+      "top5_zip_share": 0.25,
+      "max_from_one_zip": 5.0,
+      "share_from_strictest_fifth_of_areas": 0.365,
+      "share_from_most_lenient_fifth": 0.0921
+    },
+    "zip_cap": 5,
+    "all candidates": {
+      "distinct_zips": 62.42857142857143,
+      "share_from_strictest_fifth_of_areas": 0.2,
+      "share_from_most_lenient_fifth": 0.2
+    }
+  },
+  "example_rows": [
+    {
+      "rank": 1,
+      "license_": "2988236",
+      "dba_name": "DONYA LLC",
+      "zip": "60625",
+      "facility_grouped": "Grocery Store",
+      "risk_latest": 1.0,
+      "days_since_last_canvass": 309,
+      "score_final": 0.8916411164824393,
+      "reason_1": "25 violations at its last routine inspection, 25 on average over its last 3 (typical: 3)",
+      "reason_2": "failed 1 of its 1 past routine inspections",
+      "reason_3": "failed 1 routine inspection(s) in the last 2 years"
+    },
+    {
+      "rank": 2,
+      "license_": "2055272",
+      "dba_name": "SYDNEY MAROVITZ GOLF COURSE",
+      "zip": "60613",
+      "facility_grouped": "Restaurant",
+      "risk_latest": 1.0,
+      "days_since_last_canvass": 400,
+      "score_final": 0.8610221441699257,
+      "reason_1": "28 violations at its last routine inspection, 17 on average over its last 3 (typical: 3)",
+      "reason_2": "failed 7 non-routine inspection(s) (complaint or re-inspection)",
+      "reason_3": "failed 5 of its 9 past routine inspections"
+    },
+    {
+      "rank": 3,
+      "license_": "2002661",
+      "dba_name": "JW MARRIOTT HOTEL CHICAGO",
+      "zip": "60603",
+      "facility_grouped": "Restaurant",
+      "risk_latest": 1.0,
+      "days_since_last_canvass": 244,
+      "score_final": 0.8033405284509206,
+      "reason_1": "24 violations at its last routine inspection, 13 on average over its last 3 (typical: 3)",
+      "reason_2": "failed 8 of its 15 past routine inspections",
+      "reason_3": "failed 3 non-routine inspection(s) (complaint or re-inspection)"
+    },
+    {
+      "rank": 4,
+      "license_": "2977282",
+      "dba_name": "GOLDEN CHEF CHINESE KITCHEN",
+      "zip": "60647",
+      "facility_grouped": "Restaurant",
+      "risk_latest": 1.0,
+      "days_since_last_canvass": 440,
+      "score_final": 0.7921482230050891,
+      "reason_1": "23 violations at its last routine inspection, 23 on average over its last 3 (typical: 3)",
+      "reason_2": "440 days since its last routine inspection",
+      "reason_3": "risk category 1 (highest)"
+    },
+    {
+      "rank": 5,
+      "license_": "2373905",
+      "dba_name": "MIKU SUSHI",
+      "zip": "60625",
+      "facility_grouped": "Restaurant",
+      "risk_latest": 1.0,
+      "days_since_last_canvass": 345,
+      "score_final": 0.7805473814661711,
+      "reason_1": "17 violations at its last routine inspection, 13 on average over its last 3 (typical: 3)",
+      "reason_2": "failed 5 of its 9 past routine inspections",
+      "reason_3": "failed 4 non-routine inspection(s) (complaint or re-inspection)"
+    }
+  ]
+}
