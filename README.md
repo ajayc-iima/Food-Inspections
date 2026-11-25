@@ -204,12 +204,32 @@ is exploratory.
 | `rolling_experiment.py` → `results/rolling_experiment.json` | Fixed vs expanding vs recent-only training windows on 2023–25 | — | logistic 47.1 / 46.7 / 45.9%; neural 47.4 / 46.7 / 43.6% |
 | `benchmark_kumo.py` → `results/kumo_benchmark.json`, `results/kumo_context2048.json` | Kumo Tabular Small (pretrained tabular model), one estimator, sampled context | 45.4% (512 rows), 45.5% (2,048 rows) | — |
 
-The most promising lead is **non-routine inspection history**: complaint and re-inspection records add
-about 1 point on validation and about 2 points on 2022–2025 for both models. It is not in the headline
-pipeline because it was found after the evaluation period had been examined, and its extract was
-downloaded after the main snapshot (later record corrections cannot be ruled out). It should be
-confirmed on a fresh period. A learning-to-rank objective and Kumo Small did not beat the simple
-models; a larger Kumo run was still in progress at the time of this commit.
+A learning-to-rank objective and Kumo Small did not beat the simple models; a larger Kumo run was
+still in progress at the time of this commit.
+
+### Pre-registered confirmation: complaint and re-inspection history
+
+Because the non-routine features were found after 2022–2025 had been examined, we confirmed them under
+a plan committed **before** scoring ([`docs/preregistration_nonroutine.md`](docs/preregistration_nonroutine.md)):
+fixed feature set (15 features), fixed model (approach B's logistic regression plus those features),
+a decision rule, and one **untouched decision date, 2025-09-30** (5,598 candidates; label window to
+2026-09-30, complete in the snapshot), scored once. `python confirm_nonroutine.py` →
+`results/confirm_nonroutine.json`; no other result file changes.
+
+| Evidence | Logistic | Logistic + complaint history | Difference, 95% interval | History baseline |
+|---|---|---|---|---|
+| (a) Purged 2016–19 validation, mean of 2 folds | 48.2% | 49.3% | +1.0 (fold 2019: +3.3; fold 2018: −1.3) | 42.9% |
+| (b) **Untouched 2025-09-30**, one date | 33% | **43%** | **+10 [+1, +16]** (bootstrap over establishments) | 38% |
+| (c) 2022–2025, 14 dates (previously examined) | 47.4% | **49.2%** | **+1.9 [+1.3, +3.6]**, ahead 9 / tied 3 / behind 2 | 44.1% |
+
+All three pre-registered conditions hold, so the gain counts as **confirmed under our rule**: adding
+complaint and re-inspection history to approach B raises Precision@100 to 49.2% on 2022–2025
+(+5.1 points over the baseline, 95% interval +3.4 to +8.4) and to 43% on the untouched date. The
+secondary neural model shows the same pattern (47.5% → 49.9% on 2022–2025; 38% → 43% on the
+untouched date). Limits: the validation gain is small and negative on one fold; a single untouched
+date has a standard error of about 5 points; and on that date **plain logistic regression (33%) fell
+below the history baseline (38%)**, continuing the narrowing seen in 2024–2025. The headline results
+in §6 are unchanged; this is reported as a confirmed extension.
 
 ## 8. What this establishes — and what it cannot
 
@@ -217,8 +237,9 @@ models; a larger Kumo run was still in progress at the time of this commit.
 predicted failure probability finds about twice as many real failures in the next 100 routine
 inspections as random selection, and the transparent model beats the natural simple baseline at
 K = 100 (+3.3 points, 95% interval +1.6 to +5.1; ahead on 11 of 14 dates over three post-pandemic
-years), with more cited violations found on every date. It is a claim about **re-ordering the routine
-queue** the city actually ran.
+years), with more cited violations found on every date. Adding complaint and re-inspection history,
+confirmed under a pre-registered plan, lifts it to 49.2% (§7). It is a claim about **re-ordering the
+routine queue** the city actually ran.
 
 **Where the approach is fine, and where it may look fine but not be useful.** It is fine for deciding
 the order of a routine queue that will be worked through anyway. It may look fine but not help
@@ -286,6 +307,8 @@ PyArrow. Model weights download on first use (`HF_HOME` sets the cache).
 | `model_selection.py` | Prints the 2016–2019 model-selection table on its own |
 | `food_inspections/` | `config` (paths, dates, candidates, validation schemes) · `data` (download, cleaning) · `features` (point-in-time panel) · `models` and `extra_models` (candidates, purged selection) · `evaluation` (ranking, Precision@K) · `analysis` (shortlist profiles, block bootstrap) · `charts` · `pipeline` |
 | `experiment_*.py`, `rolling_experiment.py`, `benchmark_kumo.py` | Separate experiments (§7) |
+| `docs/preregistration_nonroutine.md`, `confirm_nonroutine.py` | Pre-registered confirmation of the complaint-history features (§7) |
+| `data/raw_other_inspections_through_2025_09_30.csv.gz` | Non-routine inspections through the untouched holdout date |
 | `tests/` | Unit tests |
 | `data/raw_canvass_inspections.csv.gz` | Raw routine-inspection snapshot (the submitted dataset) |
 | `data/raw_other_inspections_through_2025_06_30.csv.gz` | Non-routine inspections for the §7 experiment |
@@ -297,6 +320,7 @@ PyArrow. Model weights download on first use (`HF_HOME` sets the cache).
 | `results/feature_importance.csv`, `results/logistic_coefficients.csv` | XGBoost importance and logistic coefficients |
 | `results/shortlist_latest.csv`, `results/shortlists_all_test_dates.csv.gz` | Top-100 shortlists |
 | `results/experiment_*.json`, `results/rolling_experiment.json`, `results/kumo_*.json` | Experiment outputs |
+| `results/confirm_nonroutine.json` | Pre-registered confirmation result |
 | `charts/fig1..fig8.png` | Figures for the presentation |
 | `presentation/food_inspections_presentation.pptx` | The 14-slide presentation with speaker notes; rebuild from current results with `python presentation/build_presentation.py . presentation/food_inspections_presentation.pptx` (needs `python-pptx`) |
 

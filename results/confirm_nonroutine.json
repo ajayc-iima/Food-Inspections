@@ -1,0 +1,138 @@
+{
+  "preregistration": "docs/preregistration_nonroutine.md",
+  "holdout_date": "2025-09-30",
+  "other_raw_sha256": "4917cc6daa14e7f384e30a8e2407ffa4f0201e66634ae1953efcf1df8cfbc66a",
+  "panel_sha256": "d133349ebbb31c53f6b62d5842535e9fe9300f7d39e9e86417b6af88f4aae6ae",
+  "holdout_candidates": 5598,
+  "holdout_base_rate": 0.21793497677742052,
+  "validation_gate": {
+    "folds": {
+      "P1: fit 2016-17 -> val 2019": {
+        "logistic": 0.505,
+        "logistic_nonroutine": 0.5375000000000001
+      },
+      "P2: fit 2016 -> val 2018": {
+        "logistic": 0.46,
+        "logistic_nonroutine": 0.4475
+      }
+    },
+    "mean_gain_vs_logistic": 0.010000000000000037
+  },
+  "untouched_holdout_2025_09_30": {
+    "precision_at_100": {
+      "baseline": 0.38,
+      "logistic": 0.33,
+      "logistic_nonroutine": 0.43,
+      "neural": 0.38,
+      "neural_nonroutine": 0.43
+    },
+    "comparisons": {
+      "logistic_nonroutine minus logistic": {
+        "mean_difference": 0.09999999999999998,
+        "ci95": [
+          0.010000000000000009,
+          0.15999999999999998
+        ],
+        "method": "bootstrap over candidate establishments",
+        "dates_ahead": 1,
+        "dates_tied": 0,
+        "dates_behind": 0
+      },
+      "logistic_nonroutine minus baseline": {
+        "mean_difference": 0.04999999999999999,
+        "ci95": [
+          -0.06,
+          0.15999999999999998
+        ],
+        "method": "bootstrap over candidate establishments",
+        "dates_ahead": 1,
+        "dates_tied": 0,
+        "dates_behind": 0
+      },
+      "logistic minus baseline": {
+        "mean_difference": -0.04999999999999999,
+        "ci95": [
+          -0.14999999999999997,
+          0.08000000000000002
+        ],
+        "method": "bootstrap over candidate establishments",
+        "dates_ahead": 0,
+        "dates_tied": 0,
+        "dates_behind": 1
+      },
+      "neural_nonroutine minus neural": {
+        "mean_difference": 0.04999999999999999,
+        "ci95": [
+          -0.03999999999999998,
+          0.13
+        ],
+        "method": "bootstrap over candidate establishments",
+        "dates_ahead": 1,
+        "dates_tied": 0,
+        "dates_behind": 0
+      }
+    }
+  },
+  "previously_examined_2022_2025": {
+    "precision_at_100": {
+      "baseline": 0.4407142857142858,
+      "logistic": 0.4735714285714286,
+      "logistic_nonroutine": 0.49214285714285716,
+      "neural": 0.47500000000000003,
+      "neural_nonroutine": 0.49857142857142867
+    },
+    "comparisons": {
+      "logistic_nonroutine minus logistic": {
+        "mean_difference": 0.01857142857142857,
+        "ci95": [
+          0.012857142857142845,
+          0.03571428571428572
+        ],
+        "method": "4-quarter moving-block bootstrap over dates",
+        "dates_ahead": 9,
+        "dates_tied": 3,
+        "dates_behind": 2
+      },
+      "logistic_nonroutine minus baseline": {
+        "mean_difference": 0.05142857142857143,
+        "ci95": [
+          0.03357142857142857,
+          0.08357142857142859
+        ],
+        "method": "4-quarter moving-block bootstrap over dates",
+        "dates_ahead": 12,
+        "dates_tied": 1,
+        "dates_behind": 1
+      },
+      "logistic minus baseline": {
+        "mean_difference": 0.032857142857142856,
+        "ci95": [
+          0.016428571428571435,
+          0.05071428571428571
+        ],
+        "method": "4-quarter moving-block bootstrap over dates",
+        "dates_ahead": 11,
+        "dates_tied": 1,
+        "dates_behind": 2
+      },
+      "neural_nonroutine minus neural": {
+        "mean_difference": 0.02357142857142858,
+        "ci95": [
+          0.010000000000000005,
+          0.03357142857142857
+        ],
+        "method": "4-quarter moving-block bootstrap over dates",
+        "dates_ahead": 11,
+        "dates_tied": 0,
+        "dates_behind": 3
+      }
+    },
+    "note": "Not untouched: the exploratory script already reported these dates."
+  },
+  "decision_rule": {
+    "a_validation_gain_above_zero": true,
+    "b_holdout_not_worse_than_logistic": true,
+    "c_2022_2025_interval_excludes_zero": true,
+    "confirmed": true
+  }
+}

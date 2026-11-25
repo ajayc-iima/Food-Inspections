@@ -461,15 +461,52 @@ notes(s, "Guiding questions 3 and 4. We only see outcomes where the city inspect
          "16 training dates predate the July 2018 food code. Where it may look fine but not help: very short "
          "lists, places with no history, and places the city never visits.")
 
+# 12b pre-registered confirmation ----------------------------------------------
+cf_path = ROOT / "results/confirm_nonroutine.json"
+if cf_path.exists():
+    CF = json.loads(cf_path.read_text())
+    s = new(alt=True)
+    header(s, "A pre-registered check",
+           "Complaint and re-inspection history adds about 2 points, confirmed on a quarter nobody had scored")
+    g = CF["validation_gate"]["folds"]
+    vl = SEL.loc["logistic (reference)", crit]  # same fit as the gate's plain logistic
+    vn = sum(f["logistic_nonroutine"] for f in g.values()) / len(g)
+    ho, te = CF["untouched_holdout_2025_09_30"], CF["previously_examined_2022_2025"]
+    def dci(block, scale, d):
+        c = block["comparisons"]["logistic_nonroutine minus logistic"]
+        lo_, hi_ = c["ci95"]
+        return f"{c['mean_difference'] * 100:+.{d}f} [{lo_ * 100:+.{d}f}, {hi_ * 100:+.{d}f}]"
+    rows = [["Precision@100", "History rule", "Logistic", "+ complaint history", "Difference, 95% interval"],
+            ["2016–19 purged validation", pct(SEL.loc["baseline", crit]), pct(vl), pct(vn), f"{(vn - vl) * 100:+.1f}"],
+            ["2022–25, 14 quarters", pct(te["precision_at_100"]["baseline"]), pct(te["precision_at_100"]["logistic"]),
+             pct(te["precision_at_100"]["logistic_nonroutine"]), dci(te, 100, 1)],
+            ["2025 Q3, untouched, scored once", pct(ho["precision_at_100"]["baseline"], 0),
+             pct(ho["precision_at_100"]["logistic"], 0), pct(ho["precision_at_100"]["logistic_nonroutine"], 0),
+             dci(ho, 100, 0)]]
+    table(s, MX, 2.05, CW, rows, [0.30, 0.14, 0.14, 0.18, 0.24], size=15,
+          highlight={(2, 3), (2, 4), (3, 3), (3, 4)}, row_h=0.55)
+    cw2 = (CW - 0.3) / 2
+    card(s, MX, 4.5, cw2, 1.9, "How", "Features, model and decision rule were committed to GitHub before "
+         "scoring. All three pre-registered conditions held.", body_size=16)
+    card(s, MX + cw2 + 0.3, 4.5, cw2, 1.9, "Caveat", "One untouched quarter is weak evidence, and on it plain "
+         "logistic fell below the history rule.", body_size=16)
+    footer(s, "Plan: docs/preregistration_nonroutine.md · result: results/confirm_nonroutine.json · intervals: "
+              "block bootstrap (2022–25), bootstrap over establishments (2025 Q3).")
+    notes(s, "We found the complaint-history gain after the 2022–25 numbers had been seen, so we did not trust it "
+             "yet. We wrote down the exact features, model and decision rule, pushed that to GitHub, and then "
+             "scored 2025 Q3, which no one had evaluated. The gain held on validation, on 2022–25 and on the new "
+             "quarter. Limits: the validation gain is small and negative on one fold, one quarter has a standard "
+             "error of about 5 points, and on that quarter plain logistic regression did worse than the history rule.")
+
 # 13 next ---------------------------------------------------------------------
 s = new(alt=True)
-header(s, "What we tried next, and what it suggests", "Complaint history helps; rank by harm averted per inspector-hour next")
+header(s, "What we tried, and what comes next", "Beyond accuracy: rank by harm averted per inspector-hour")
 nr = json.loads((ROOT / "results/experiment_nonroutine.json").read_text())
 ev = nr["exploratory_test"]
 cw = (CW - 3 * 0.3) / 4
 card(s, MX, 2.15, cw, 2.4, "Tested: complaints",
-     f"Complaint and re-inspection history: logistic {pct(ev['logistic_original'])} → {pct(ev['logistic_nonroutine'])}. "
-     "To confirm on a fresh period.", body_size=14, border=LOGIT)
+     f"Complaint and re-inspection history: logistic {pct(ev['logistic_original'])} → {pct(ev['logistic_nonroutine'])}, "
+     "confirmed by the pre-registered check.", body_size=14, border=LOGIT)
 card(s, MX + (cw + 0.3), 2.15, cw, 2.4, "Tested: no gain",
      "A model trained directly for ranking, violation-topic features and the Kumo Small tabular model.", body_size=14)
 card(s, MX + 2 * (cw + 0.3), 2.15, cw, 2.4, "Next: severity × exposure",
@@ -479,8 +516,7 @@ card(s, MX + 3 * (cw + 0.3), 2.15, cw, 2.4, "Next: cost and exploration",
 text(s, MX, 4.9, CW, 1.2, "With equal weights, no travel and no exploration, the proposal reduces to today’s "
      "Precision@100 ranking, so it extends the project rather than replacing it.", size=18)
 footer(s, "Experiments: results/experiment_*.json. Exploration idea from audit-selection work (Henderson et al. 2023).")
-notes(s, "The complaint-history gain was found after the 2022–25 period had been looked at, so present it as a "
-         "lead, not a result. The business extension: inspector time is the scarce resource; a failure at a school "
+notes(s, "The complaint-history gain is confirmed on the previous slide. The business extension: inspector time is the scarce resource; a failure at a school "
          "kitchen matters more than one at a low-traffic kiosk; and a purely greedy ranking stops generating data "
          "about places it never picks.")
 
@@ -494,7 +530,7 @@ pts = [f"The history rule finds {pct(P100['baseline'], 0)} failures in the top 1
        f"Logistic regression adds {diff * 100:.1f} points (95% interval +{lo * 100:.1f} to +{hi * 100:.1f}) and "
        "more violations on every quarter; the validation-selected neural net does the same.",
        "The lists differ because the model looks at how bad recent visits were, not just how often a place failed.",
-       "Most promising next feature: complaint and re-inspection history, to be confirmed."]
+       "Adding complaint and re-inspection history lifts the model to 49.2%, confirmed under a pre-registered check."]
 tb = text(s, MX, 3.15, CW, 2.8, pts, size=19, color=RGBColor(0xE9, 0xED, 0xF4))
 for p in tb.text_frame.paragraphs:
     pPr = p._p.get_or_add_pPr()
